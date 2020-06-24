@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <memory.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/un.h>
 #include <unistd.h>
 
 #include "appinfo.h"
 
+int open_socket(const char *name) {
+  int sock;
+  struct sockaddr_un addr;
+  size_t namelen;
+  socklen_t addrlen;
 
-int
-open_socket(const char *name) {
-    int sock;
-    struct sockaddr_un addr;
-    size_t namelen;
-    socklen_t addrlen;
+  sock = socket(AF_UNIX, SOCK_STREAM, 0);
+  if (sock == -1) {
+    return -1;
+  }
 
-    sock = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (sock == -1) {
-        return -1;
-    }
+  memset(&addr, 0, sizeof(addr));
+  addr.sun_family = AF_UNIX;
 
-    memset(&addr, 0, sizeof(addr));
-    addr.sun_family = AF_UNIX;
+  namelen = strlen(name);
+  if (namelen >= sizeof(addr.sun_path))
+    namelen = sizeof(addr.sun_path) - 1;
+  strncpy(addr.sun_path + 1, name, namelen);
+  addrlen = (socklen_t)offsetof(struct sockaddr_un, sun_path) + 1 +
+            (socklen_t)namelen;
 
-    namelen = strlen(name);
-    if (namelen >= sizeof(addr.sun_path))
-        namelen = sizeof(addr.sun_path) - 1;
-    strncpy(addr.sun_path + 1, name, namelen);
-    addrlen = (socklen_t) offsetof(struct sockaddr_un, sun_path) + 1 + (socklen_t) namelen;
+  if (connect(sock, (const struct sockaddr *)&addr, addrlen) == -1) {
+    close(sock);
+    return -1;
+  }
 
-    if (connect(sock, (const struct sockaddr *) &addr, addrlen) == -1) {
-        close(sock);
-        return -1;
-    }
-
-    return sock;
+  return sock;
 }

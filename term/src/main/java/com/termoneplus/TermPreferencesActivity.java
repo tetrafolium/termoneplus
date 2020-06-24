@@ -19,76 +19,77 @@ package com.termoneplus;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-
-import com.termoneplus.utils.ThemeManager;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-
+import com.termoneplus.utils.ThemeManager;
 
 public class TermPreferencesActivity extends AppCompatActivity
     implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        {
-            ActionBar action_bar = getSupportActionBar();
-            if (action_bar != null) {
-                action_bar.setDisplayHomeAsUpEnabled(true);
-            }
-        }
-
-        {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            prefs.registerOnSharedPreferenceChangeListener(this);
-        }
-
-        loadPreferences();
+    {
+      ActionBar action_bar = getSupportActionBar();
+      if (action_bar != null) {
+        action_bar.setDisplayHomeAsUpEnabled(true);
+      }
     }
 
-    @Override
-    protected void onDestroy() {
-        {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            prefs.unregisterOnSharedPreferenceChangeListener(this);
-        }
-        super.onDestroy();
+    {
+      SharedPreferences prefs =
+          PreferenceManager.getDefaultSharedPreferences(this);
+      prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home: // Action bar home button selected
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
+    loadPreferences();
+  }
 
-    private void loadPreferences() {
-        // Display the fragment as the main content.
-        getSupportFragmentManager().beginTransaction()
+  @Override
+  protected void onDestroy() {
+    {
+      SharedPreferences prefs =
+          PreferenceManager.getDefaultSharedPreferences(this);
+      prefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    super.onDestroy();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case android.R.id.home: // Action bar home button selected
+      NavUtils.navigateUpFromSameTask(this);
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
+    }
+  }
+
+  private void loadPreferences() {
+    // Display the fragment as the main content.
+    getSupportFragmentManager()
+        .beginTransaction()
         .replace(android.R.id.content, new TermPreferencesFragment())
         .commit();
-    }
+  }
 
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                        String key) {
+    if (ThemeManager.PREF_THEME_MODE.equals(key)) {
+      // Do no not inform user!
+      restart(0);
+    }
+  }
+
+  public static class TermPreferencesFragment extends PreferenceFragmentCompat {
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (ThemeManager.PREF_THEME_MODE.equals(key)) {
-            // Do no not inform user!
-            restart(0);
-        }
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
+      // Load the preferences from an XML resource
+      setPreferencesFromResource(R.xml.preferences, rootKey);
     }
-
-    public static class TermPreferencesFragment extends PreferenceFragmentCompat {
-        @Override
-        public void onCreatePreferences(Bundle bundle, String rootKey) {
-            // Load the preferences from an XML resource
-            setPreferencesFromResource(R.xml.preferences, rootKey);
-        }
-    }
+  }
 }

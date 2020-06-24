@@ -4,36 +4,35 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import jackpal.androidterm.util.TermSettings;
 
-
 class BoundSession extends GenericTermSession {
-    private final String issuerTitle;
+  private final String issuerTitle;
 
-    private boolean fullyInitialized;
+  private boolean fullyInitialized;
 
-    BoundSession(ParcelFileDescriptor ptmxFd, TermSettings settings, String issuerTitle) {
-        super(ptmxFd, settings, true);
+  BoundSession(ParcelFileDescriptor ptmxFd, TermSettings settings,
+               String issuerTitle) {
+    super(ptmxFd, settings, true);
 
-        this.issuerTitle = issuerTitle;
-    }
+    this.issuerTitle = issuerTitle;
+  }
 
-    @Override
-    public String getTitle() {
-        final String extraTitle = super.getTitle();
+  @Override
+  public String getTitle() {
+    final String extraTitle = super.getTitle();
 
-        return TextUtils.isEmpty(extraTitle)
-               ? issuerTitle
-               : issuerTitle + " — " + extraTitle;
-    }
+    return TextUtils.isEmpty(extraTitle) ? issuerTitle
+                                         : issuerTitle + " — " + extraTitle;
+  }
 
-    @Override
-    public void initializeEmulator(int columns, int rows) {
-        super.initializeEmulator(columns, rows);
+  @Override
+  public void initializeEmulator(int columns, int rows) {
+    super.initializeEmulator(columns, rows);
 
-        fullyInitialized = true;
-    }
+    fullyInitialized = true;
+  }
 
-    @Override
-    boolean isFailFast() {
-        return !fullyInitialized;
-    }
+  @Override
+  boolean isFailFast() {
+    return !fullyInitialized;
+  }
 }

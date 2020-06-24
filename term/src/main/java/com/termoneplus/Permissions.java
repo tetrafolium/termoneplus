@@ -19,67 +19,71 @@ package com.termoneplus;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
+import java.util.ArrayList;
 
 public class Permissions {
 
-    public static final int REQUEST_EXTERNAL_STORAGE = 101;
+  public static final int REQUEST_EXTERNAL_STORAGE = 101;
 
-    static String[] external_stogare_permissions = null;
+  static String[] external_stogare_permissions = null;
 
+  public static void constructExternalStoragePermissions() {
+    if (external_stogare_permissions != null)
+      return;
 
-    public static void constructExternalStoragePermissions() {
-        if (external_stogare_permissions != null) return;
-
-        ArrayList<String> list = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN /*API Level 16*/) {
-            // added in API level 16
-            list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        external_stogare_permissions = list.toArray(new String[0]);
+    ArrayList<String> list = new ArrayList<>();
+    if (Build.VERSION.SDK_INT >=
+        Build.VERSION_CODES.JELLY_BEAN /*API Level 16*/) {
+      // added in API level 16
+      list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
+    list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    public static boolean permissionExternalStorage(AppCompatActivity activity) {
-        boolean granted = true;
-        constructExternalStoragePermissions();
-        for (String permission : external_stogare_permissions) {
-            int status = ActivityCompat.checkSelfPermission(activity, permission);
-            if (status == PackageManager.PERMISSION_GRANTED) continue;
-            granted = false;
-            break;
-        }
-        return granted;
-    }
+    external_stogare_permissions = list.toArray(new String[0]);
+  }
 
-    public static boolean shouldShowExternalStorageRationale(AppCompatActivity activity) {
-        boolean flag = false;
-        constructExternalStoragePermissions();
-        for (String permission : external_stogare_permissions) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                flag = true;
-                break;
-            }
-        }
-        return flag;
+  public static boolean permissionExternalStorage(AppCompatActivity activity) {
+    boolean granted = true;
+    constructExternalStoragePermissions();
+    for (String permission : external_stogare_permissions) {
+      int status = ActivityCompat.checkSelfPermission(activity, permission);
+      if (status == PackageManager.PERMISSION_GRANTED)
+        continue;
+      granted = false;
+      break;
     }
+    return granted;
+  }
 
-    public static void requestPermissionExternalStorage(AppCompatActivity activity, int requestCode) {
-        ActivityCompat.requestPermissions(activity, external_stogare_permissions, requestCode);
+  public static boolean
+  shouldShowExternalStorageRationale(AppCompatActivity activity) {
+    boolean flag = false;
+    constructExternalStoragePermissions();
+    for (String permission : external_stogare_permissions) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                                                              permission)) {
+        flag = true;
+        break;
+      }
     }
+    return flag;
+  }
 
-    public static boolean isPermissionGranted(int[] grantResults) {
-        // Note if request is cancelled, the result arrays are empty.
-        for (int result : grantResults) {
-            if (result != PackageManager.PERMISSION_GRANTED)
-                return false;
-        }
-        return grantResults.length > 0; // i.e. false by default
+  public static void
+  requestPermissionExternalStorage(AppCompatActivity activity,
+                                   int requestCode) {
+    ActivityCompat.requestPermissions(activity, external_stogare_permissions,
+                                      requestCode);
+  }
+
+  public static boolean isPermissionGranted(int[] grantResults) {
+    // Note if request is cancelled, the result arrays are empty.
+    for (int result : grantResults) {
+      if (result != PackageManager.PERMISSION_GRANTED)
+        return false;
     }
+    return grantResults.length > 0; // i.e. false by default
+  }
 }

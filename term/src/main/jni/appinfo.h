@@ -18,17 +18,16 @@
  */
 
 #ifndef PACKAGE_NAME
-#  error "package name is not defined"
+#error "package name is not defined"
 #endif
 
-#define SOCKET_PREFIX   PACKAGE_NAME "-app_paths-"
+#define SOCKET_PREFIX PACKAGE_NAME "-app_paths-"
 
 int open_socket(const char *name);
 
-
 typedef ssize_t (*atomicio_f)(int fd, void *buf, size_t count);
 
-#define vwrite (atomicio_f)write
+#define vwrite (atomicio_f) write
 
 size_t atomicio(atomicio_f f, int fd, void *buf, size_t count);
 

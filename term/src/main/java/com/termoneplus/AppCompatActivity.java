@@ -18,42 +18,40 @@ package com.termoneplus;
 
 import android.view.Gravity;
 import android.widget.Toast;
-
 import com.termoneplus.utils.ThemeManager;
 
+public class AppCompatActivity
+    extends androidx.appcompat.app.AppCompatActivity {
+  private Integer theme_resid;
 
-public class AppCompatActivity extends androidx.appcompat.app.AppCompatActivity {
-    private Integer theme_resid;
+  @Override
+  public void setTheme(int resid) {
+    boolean actionbar = false;
+    try {
+      if (R.style.AppTheme ==
+          getPackageManager().getActivityInfo(getComponentName(), 0).theme)
+        actionbar = true;
+    } catch (Exception ignore) {
+    }
+    theme_resid = ThemeManager.presetTheme(this, actionbar, resid);
+    super.setTheme(theme_resid);
+  }
 
-    @Override
-    public void setTheme(int resid) {
-        boolean actionbar = false;
-        try {
-            if (R.style.AppTheme == getPackageManager().
-                    getActivityInfo(getComponentName(), 0).theme)
-                actionbar = true;
-        } catch (Exception ignore) {
-        }
-        theme_resid = ThemeManager.presetTheme(this, actionbar, resid);
-        super.setTheme(theme_resid);
+  protected final Integer getThemeId() { return theme_resid; }
+
+  protected void restart(int rid) {
+    if (rid != 0) {
+      Toast toast =
+          Toast.makeText(getApplicationContext(), rid, Toast.LENGTH_LONG);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
     }
 
-    protected final Integer getThemeId() {
-        return theme_resid;
-    }
-
-    protected void restart(int rid) {
-        if (rid != 0) {
-            Toast toast = Toast.makeText(getApplicationContext(), rid, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
-
-        /* Let use function from API level 11
-        Intent intent = Intent.makeRestartActivityTask(getComponentName());
-        startActivity(intent);
-        finish();
-        */
-        recreate();
-    }
+    /* Let use function from API level 11
+    Intent intent = Intent.makeRestartActivityTask(getComponentName());
+    startActivity(intent);
+    finish();
+    */
+    recreate();
+  }
 }

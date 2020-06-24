@@ -18,76 +18,77 @@ package com.termoneplus;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.ListFragment;
 
+public class WindowListFragment
+    extends ListFragment implements AdapterView.OnItemClickListener {
+  private OnItemSelectedListener listener;
 
-public class WindowListFragment extends ListFragment implements AdapterView.OnItemClickListener {
-    private OnItemSelectedListener listener;
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    try {
+      listener = (OnItemSelectedListener)context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(context.toString() +
+                                   " must implement OnItemSelectedListener");
+    }
+  }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            listener = (OnItemSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                                         + " must implement OnItemSelectedListener");
-        }
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_windowlist, container, false);
+  }
+
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    WindowListAdapter adapter = new WindowListAdapter(getActivity());
+
+    setListAdapter(adapter);
+    getListView().setOnItemClickListener(this);
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position,
+                          long id) {
+    if (listener != null)
+      listener.onPositionSelected(position);
+  }
+
+  public interface OnItemSelectedListener {
+    void onPositionSelected(int position);
+  }
+
+  public static class CloseButton extends AppCompatImageView {
+    public CloseButton(Context context) { super(context); }
+
+    public CloseButton(Context context, AttributeSet attrs) {
+      super(context, attrs);
+    }
+
+    public CloseButton(Context context, AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_windowlist, container, false);
+    // Avoid child elements to share pressed state with their parent.
+    // NOTE parent android:clickable attribute set to false is not same!
+    // As result parent could be pressed and Fragment receives onItemClick
+    // event.
+    public void setPressed(boolean pressed) {
+      if (pressed && ((View)getParent()).isPressed())
+        return;
+
+      super.setPressed(pressed);
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        WindowListAdapter adapter = new WindowListAdapter(getActivity());
-
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (listener != null) listener.onPositionSelected(position);
-    }
-
-    public interface OnItemSelectedListener {
-        void onPositionSelected(int position);
-    }
-
-    public static class CloseButton extends AppCompatImageView {
-        public CloseButton(Context context) {
-            super(context);
-        }
-
-        public CloseButton(Context context, AttributeSet attrs) {
-            super(context, attrs);
-        }
-
-        public CloseButton(Context context, AttributeSet attrs, int defStyleAttr) {
-            super(context, attrs, defStyleAttr);
-        }
-
-        @Override
-        // Avoid child elements to share pressed state with their parent.
-        // NOTE parent android:clickable attribute set to false is not same!
-        // As result parent could be pressed and Fragment receives onItemClick event.
-        public void setPressed(boolean pressed) {
-            if (pressed && ((View) getParent()).isPressed()) return;
-
-            super.setPressed(pressed);
-        }
-    }
+  }
 }
