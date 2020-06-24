@@ -95,8 +95,8 @@ public class UnixSocketServer {
                     Random random = new Random();
                     WorkerThread worker = new WorkerThread(connection, handler);
                     worker.setName(BuildConfig.APPLICATION_ID
-                            + ":unix_socket_" + android.os.Process.myPid()
-                            + "." + random.nextInt());
+                                   + ":unix_socket_" + android.os.Process.myPid()
+                                   + "." + random.nextInt());
                     worker.setDaemon(true);
                     worker.start();
                 } catch (IOException ignore) {

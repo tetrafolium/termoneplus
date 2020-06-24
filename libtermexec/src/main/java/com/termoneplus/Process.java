@@ -29,8 +29,8 @@ public class Process {
     }
 
     public static int createSubprocess(
-            ParcelFileDescriptor masterPty,
-            String cmd, String[] arguments, String[] environment
+        ParcelFileDescriptor masterPty,
+        String cmd, String[] arguments, String[] environment
     ) throws IOException {
         // Let convert to UTF-8 in java code instead in native methods
         try {
@@ -73,8 +73,8 @@ public class Process {
 
     private static class Native {
         private static native int createSubprocess(
-                int ptm,
-                byte[] path, byte[][] argv, byte[][] envp
+            int ptm,
+            byte[] path, byte[][] argv, byte[][] envp
         ) throws IOException;
         private static native int waitExit(int pid);
         private static native void finishChilds(int pid);

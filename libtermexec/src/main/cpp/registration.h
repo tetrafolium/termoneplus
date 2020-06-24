@@ -21,8 +21,8 @@
 
 
 int register_native(
-        JNIEnv *env, const char *class_name,
-        JNINativeMethod *methods, size_t num_methods
+    JNIEnv *env, const char *class_name,
+    JNINativeMethod *methods, size_t num_methods
 );
 
 int register_process(JNIEnv *env);

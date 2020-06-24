@@ -58,15 +58,15 @@ class Bitmap4x8FontRenderer extends BaseTextRenderer {
     }
 
     public void drawTextRun(Canvas canvas, float x, float y,
-            int lineOffset, int runWidth, char[] text, int index, int count,
-            boolean selectionStyle, int textStyle,
-            int cursorOffset, int cursorIndex, int cursorIncr, int cursorWidth, int cursorMode) {
+                            int lineOffset, int runWidth, char[] text, int index, int count,
+                            boolean selectionStyle, int textStyle,
+                            int cursorOffset, int cursorIndex, int cursorIncr, int cursorWidth, int cursorMode) {
         int foreColor = TextStyle.decodeForeColor(textStyle);
         int backColor = TextStyle.decodeBackColor(textStyle);
         int effect = TextStyle.decodeEffect(textStyle);
 
         boolean inverse = mReverseVideo
-                ^ ((effect & (TextStyle.fxInverse | TextStyle.fxItalic)) != 0);
+                          ^ ((effect & (TextStyle.fxInverse | TextStyle.fxItalic)) != 0);
         if (inverse) {
             int temp = foreColor;
             foreColor = backColor;
@@ -98,13 +98,13 @@ class Bitmap4x8FontRenderer extends BaseTextRenderer {
 
         // The cursor is too small to show the cursor mode.
         if (lineOffset <= cursorOffset && cursorOffset < (lineOffset + count)) {
-          drawTextRunHelper(canvas, x, y, cursorOffset, text, cursorOffset-lineOffset, 1,
-                  TextStyle.ciCursorForeground, TextStyle.ciCursorBackground);
+            drawTextRunHelper(canvas, x, y, cursorOffset, text, cursorOffset-lineOffset, 1,
+                              TextStyle.ciCursorForeground, TextStyle.ciCursorBackground);
         }
     }
 
     private void drawTextRunHelper(Canvas canvas, float x, float y, int lineOffset, char[] text,
-            int index, int count, int foreColor, int backColor) {
+                                   int index, int count, int foreColor, int backColor) {
         setColorMatrix(mPalette[foreColor], mPalette[backColor]);
         int destX = (int) x + kCharacterWidth * lineOffset;
         int destY = (int) y;
@@ -122,7 +122,7 @@ class Bitmap4x8FontRenderer extends BaseTextRenderer {
                 int srcX = cellX * kCharacterWidth;
                 int srcY = cellY * kCharacterHeight;
                 srcRect.set(srcX, srcY,
-                        srcX + kCharacterWidth, srcY + kCharacterHeight);
+                            srcX + kCharacterWidth, srcY + kCharacterHeight);
                 destRect.left = destX;
                 destRect.right = destX + kCharacterWidth;
                 canvas.drawBitmap(mFont, srcRect, destRect, mPaint);

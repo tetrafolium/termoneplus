@@ -174,7 +174,7 @@ public class TelnetSession extends TermSession {
     private void doLocalEcho(byte[] data) {
         if (DEBUG) {
             Log.d(TAG, "echoing "
-                    + Arrays.toString(data) + " back to terminal");
+                  + Arrays.toString(data) + " back to terminal");
         }
         appendToEmulator(data, 0, data.length);
         notifyUpdate();
@@ -203,50 +203,50 @@ public class TelnetSession extends TermSession {
             }
 
             switch (curByte) {
-                case IAC: // Telnet command prefix
-                    mInTelnetCommand = true;
+            case IAC: // Telnet command prefix
+                mInTelnetCommand = true;
                 /* Assume we're talking to a real Telnet server */
-                    if (!peerIsTelnetd) {
-                        doTelnetInit();
+                if (!peerIsTelnetd) {
+                    doTelnetInit();
+                }
+                break;
+            case CMD_GA: // GA -- clear to send
+                /**
+                 * If we're in half-duplex flow control, we've been given
+                 * permission to send data; flush our output buffers.
+                 *
+                 * Note that it's not strictly correct to send the other
+                 * side a GA at this point, but since we're not actually
+                 * attached to a half-duplex terminal, we don't have a signal
+                 * to indicate when the other side should logically begin
+                 * to send again.
+                 *
+                 * In full-duplex operation (option SUPPRESS-GO-AHEAD enabled),
+                 * does nothing.
+                 */
+                byte[] cmdGa = {(byte) IAC, (byte) CMD_GA};
+                if (!peerSuppressedGoAhead) {
+                    if (!suppressGoAhead) {
+                        doWrite(cmdGa, 0, cmdGa.length);
+                    }
+                    flushWriteBuf();
+                }
+                break;
+            case 0: // NUL -- should be ignored following a CR
+                if (lastByte == '\r') {
+                    if (echoInput) {
+                        // We do need to echo it back to the server, though
+                        doEchoInput(0);
                     }
                     break;
-                case CMD_GA: // GA -- clear to send
-                    /**
-                     * If we're in half-duplex flow control, we've been given
-                     * permission to send data; flush our output buffers.
-                     *
-                     * Note that it's not strictly correct to send the other
-                     * side a GA at this point, but since we're not actually
-                     * attached to a half-duplex terminal, we don't have a signal
-                     * to indicate when the other side should logically begin
-                     * to send again.
-                     *
-                     * In full-duplex operation (option SUPPRESS-GO-AHEAD enabled),
-                     * does nothing.
-                     */
-                    byte[] cmdGa = {(byte) IAC, (byte) CMD_GA};
-                    if (!peerSuppressedGoAhead) {
-                        if (!suppressGoAhead) {
-                            doWrite(cmdGa, 0, cmdGa.length);
-                        }
-                        flushWriteBuf();
-                    }
-                    break;
-                case 0: // NUL -- should be ignored following a CR
-                    if (lastByte == '\r') {
-                        if (echoInput) {
-                            // We do need to echo it back to the server, though
-                            doEchoInput(0);
-                        }
-                        break;
-                    }
-                default:
+                }
+            default:
                 /* Send the data to the terminal emulator, and echo it back
                    across the network if the other end wants us to do so. */
-                    super.processInput(buffer, i, 1);
-                    if (echoInput) {
-                        doEchoInput(buffer[i]);
-                    }
+                super.processInput(buffer, i, 1);
+                if (echoInput) {
+                    doEchoInput(buffer[i]);
+                }
             }
             lastByte = curByte;
         }
@@ -271,78 +271,78 @@ public class TelnetSession extends TermSession {
         /* Handle parameter lists */
         if (mMultipleParameters) {
             switch (curByte) {
-                case CMD_SE: // SE -- end of parameters
-                    doMultiParamCommand();
-                    finishTelnetCommand();
-                    return;
-                default:
-                    addMultiParam(curByte);
-                    return;
+            case CMD_SE: // SE -- end of parameters
+                doMultiParamCommand();
+                finishTelnetCommand();
+                return;
+            default:
+                addMultiParam(curByte);
+                return;
             }
         }
 
         /* Handle option negotiation */
         switch (mTelnetCommand) {
-            case CMD_WILL:
-                handleWillOption(curByte);
-                return;
-            case CMD_WONT:
-                handleWontOption(curByte);
-                return;
-            case CMD_DO:
-                handleDoOption(curByte);
-                return;
-            case CMD_DONT:
-                handleDontOption(curByte);
-                return;
+        case CMD_WILL:
+            handleWillOption(curByte);
+            return;
+        case CMD_WONT:
+            handleWontOption(curByte);
+            return;
+        case CMD_DO:
+            handleDoOption(curByte);
+            return;
+        case CMD_DONT:
+            handleDontOption(curByte);
+            return;
         }
 
         /* Telnet commands */
         switch (curByte) {
-            case CMD_EC: // EC -- erase character
-                // ESC [ D (VT100 cursor left)
-                byte[] cmdLeft = {(byte) 27, (byte) '[', (byte) 'D'};
-                // ESC [ P (VT100 erase char at cursor)
-                byte[] cmdErase = {(byte) 27, (byte) '[', (byte) 'P'};
-                super.processInput(cmdLeft, 0, cmdLeft.length);
-                super.processInput(cmdErase, 0, cmdErase.length);
-                break;
-            case CMD_EL: // EL -- erase line
-                // ESC [ 2 K (VT100 clear whole line)
-                byte[] cmdEl = {(byte) 27, (byte) '[', (byte) '2', (byte) 'K'};
-                super.processInput(cmdEl, 0, cmdEl.length);
-                break;
-            case IAC: // send the IAC character to terminal
-                byte[] iac = {(byte) IAC};
-                super.processInput(iac, 0, iac.length);
-                break;
-            case CMD_SB: // SB -- more parameters follow option
-                mMultipleParameters = true;
-                return;
-            case CMD_WILL: // WILL
-            case CMD_WONT: // WON'T
-            case CMD_DO: // DO
-            case CMD_DONT: // DON'T
-                // Option negotiation -- save the command and wait for the option
-                mTelnetCommand = curByte;
-                return;
-            case CMD_AYT: // AYT -- Are You There
-                /**
-                 * RFC 854 says we should send back "some visible (i.e., printable)
-                 * evidence that the AYT was received" ... this is as good as
-                 * anything else
-                 */
-                byte[] msg = "yes, I'm here\r\n".getBytes();
-                super.write(msg, 0, msg.length);
-                break;
-            // The following are unimplemented
-            case CMD_MARK:    // data mark
-            case CMD_BRK:    // send a break to the terminal
-            case CMD_IP:    // IP -- interrupt process
-            case CMD_AO:    // AO -- abort output
-            case CMD_NOP:    // NOP
-            default:
-                break;
+        case CMD_EC: // EC -- erase character
+            // ESC [ D (VT100 cursor left)
+            byte[] cmdLeft = {(byte) 27, (byte) '[', (byte) 'D'};
+            // ESC [ P (VT100 erase char at cursor)
+            byte[] cmdErase = {(byte) 27, (byte) '[', (byte) 'P'};
+            super.processInput(cmdLeft, 0, cmdLeft.length);
+            super.processInput(cmdErase, 0, cmdErase.length);
+            break;
+        case CMD_EL: // EL -- erase line
+            // ESC [ 2 K (VT100 clear whole line)
+            byte[] cmdEl = {(byte) 27, (byte) '[', (byte) '2', (byte) 'K'};
+            super.processInput(cmdEl, 0, cmdEl.length);
+            break;
+        case IAC: // send the IAC character to terminal
+            byte[] iac = {(byte) IAC};
+            super.processInput(iac, 0, iac.length);
+            break;
+        case CMD_SB: // SB -- more parameters follow option
+            mMultipleParameters = true;
+            return;
+        case CMD_WILL: // WILL
+        case CMD_WONT: // WON'T
+        case CMD_DO: // DO
+        case CMD_DONT: // DON'T
+            // Option negotiation -- save the command and wait for the option
+            mTelnetCommand = curByte;
+            return;
+        case CMD_AYT: // AYT -- Are You There
+            /**
+             * RFC 854 says we should send back "some visible (i.e., printable)
+             * evidence that the AYT was received" ... this is as good as
+             * anything else
+             */
+            byte[] msg = "yes, I'm here\r\n".getBytes();
+            super.write(msg, 0, msg.length);
+            break;
+        // The following are unimplemented
+        case CMD_MARK:    // data mark
+        case CMD_BRK:    // send a break to the terminal
+        case CMD_IP:    // IP -- interrupt process
+        case CMD_AO:    // AO -- abort output
+        case CMD_NOP:    // NOP
+        default:
+            break;
         }
 
         finishTelnetCommand();
@@ -411,27 +411,27 @@ public class TelnetSession extends TermSession {
      */
     private void handleWillOption(int curByte) {
         switch (curByte) {
-            case OPTION_ECHO: // WILL ECHO
-                // We don't ever request DO ECHO, so this must be a request
-                if (!peerEchoesInput) {
-                    sendOption(CMD_DO, OPTION_ECHO);
-                }
-                peerEchoesInput = true;
-                break;
-            case OPTION_SUPPRESS_GO_AHEAD: // WILL SUPPRESS-GO-AHEAD
-                if (!doSuppressGaRequested && !peerSuppressedGoAhead) {
-                    // This is a request which changes our state, send a reply
-                    sendOption(CMD_DO, OPTION_SUPPRESS_GO_AHEAD);
-                }
-                peerSuppressedGoAhead = true;
-                doSuppressGaRequested = false;
-                // Flush unwritten data in the output buffer
-                flushWriteBuf();
-                break;
-            default: // unrecognized option
-                // refuse to let other end enable unknown options
-                sendOption(CMD_DONT, curByte);
-                break;
+        case OPTION_ECHO: // WILL ECHO
+            // We don't ever request DO ECHO, so this must be a request
+            if (!peerEchoesInput) {
+                sendOption(CMD_DO, OPTION_ECHO);
+            }
+            peerEchoesInput = true;
+            break;
+        case OPTION_SUPPRESS_GO_AHEAD: // WILL SUPPRESS-GO-AHEAD
+            if (!doSuppressGaRequested && !peerSuppressedGoAhead) {
+                // This is a request which changes our state, send a reply
+                sendOption(CMD_DO, OPTION_SUPPRESS_GO_AHEAD);
+            }
+            peerSuppressedGoAhead = true;
+            doSuppressGaRequested = false;
+            // Flush unwritten data in the output buffer
+            flushWriteBuf();
+            break;
+        default: // unrecognized option
+            // refuse to let other end enable unknown options
+            sendOption(CMD_DONT, curByte);
+            break;
         }
 
         finishTelnetCommand();
@@ -439,24 +439,24 @@ public class TelnetSession extends TermSession {
 
     private void handleWontOption(int curByte) {
         switch (curByte) {
-            case OPTION_ECHO: // WON'T ECHO
-                // We don't ever request DO ECHO, so this must be a request
-                if (peerEchoesInput) {
-                    sendOption(CMD_DONT, OPTION_ECHO);
-                }
-                peerEchoesInput = false;
-                break;
-            case OPTION_SUPPRESS_GO_AHEAD: // WON'T SUPPRESS-GO-AHEAD
-                if (!doSuppressGaRequested && peerSuppressedGoAhead) {
-                    // This is a request which changes our state, send a reply
-                    sendOption(CMD_DONT, OPTION_SUPPRESS_GO_AHEAD);
-                }
-                peerSuppressedGoAhead = false;
-                doSuppressGaRequested = false;
-                break;
-            default: // unrecognized option
-                // WON'T is the default for any option, so we shouldn't reply
-                break;
+        case OPTION_ECHO: // WON'T ECHO
+            // We don't ever request DO ECHO, so this must be a request
+            if (peerEchoesInput) {
+                sendOption(CMD_DONT, OPTION_ECHO);
+            }
+            peerEchoesInput = false;
+            break;
+        case OPTION_SUPPRESS_GO_AHEAD: // WON'T SUPPRESS-GO-AHEAD
+            if (!doSuppressGaRequested && peerSuppressedGoAhead) {
+                // This is a request which changes our state, send a reply
+                sendOption(CMD_DONT, OPTION_SUPPRESS_GO_AHEAD);
+            }
+            peerSuppressedGoAhead = false;
+            doSuppressGaRequested = false;
+            break;
+        default: // unrecognized option
+            // WON'T is the default for any option, so we shouldn't reply
+            break;
         }
 
         finishTelnetCommand();
@@ -464,30 +464,30 @@ public class TelnetSession extends TermSession {
 
     private void handleDoOption(int curByte) {
         switch (curByte) {
-            case OPTION_ECHO: // DO ECHO
+        case OPTION_ECHO: // DO ECHO
             /* Other Telnet clients like netkit-telnet refuse this request when
                they receive it, since it doesn't make much sense */
-                sendOption(CMD_WONT, OPTION_ECHO);
-                /**
-                 // We don't ever request WILL ECHO, so this must be a request
-                 if (!echoInput) {
-                 sendOption(CMD_WILL, OPTION_ECHO);
-                 }
-                 echoInput = true;
-                 */
-                break;
-            case OPTION_SUPPRESS_GO_AHEAD: // DO SUPPRESS-GO-AHEAD
-                if (!willSuppressGaRequested && !suppressGoAhead) {
-                    // This is a request which changes our state, send a reply
-                    sendOption(CMD_WILL, OPTION_SUPPRESS_GO_AHEAD);
-                }
-                suppressGoAhead = true;
-                willSuppressGaRequested = false;
-                break;
-            default: // unrecognized option
-                // refuse to enable unknown options
-                sendOption(CMD_WONT, curByte);
-                break;
+            sendOption(CMD_WONT, OPTION_ECHO);
+            /**
+             // We don't ever request WILL ECHO, so this must be a request
+             if (!echoInput) {
+             sendOption(CMD_WILL, OPTION_ECHO);
+             }
+             echoInput = true;
+             */
+            break;
+        case OPTION_SUPPRESS_GO_AHEAD: // DO SUPPRESS-GO-AHEAD
+            if (!willSuppressGaRequested && !suppressGoAhead) {
+                // This is a request which changes our state, send a reply
+                sendOption(CMD_WILL, OPTION_SUPPRESS_GO_AHEAD);
+            }
+            suppressGoAhead = true;
+            willSuppressGaRequested = false;
+            break;
+        default: // unrecognized option
+            // refuse to enable unknown options
+            sendOption(CMD_WONT, curByte);
+            break;
         }
 
         finishTelnetCommand();
@@ -495,24 +495,24 @@ public class TelnetSession extends TermSession {
 
     private void handleDontOption(int curByte) {
         switch (curByte) {
-            case OPTION_ECHO: // DON'T ECHO
-                // We don't ever request DON'T ECHO, so this must be a request
-                if (echoInput) {
-                    sendOption(CMD_WONT, OPTION_ECHO);
-                }
-                echoInput = false;
-                break;
-            case OPTION_SUPPRESS_GO_AHEAD: // DON'T SUPPRESS-GO-AHEAD
-                if (!willSuppressGaRequested && suppressGoAhead) {
-                    // This is a request which changes our state, send a reply
-                    sendOption(CMD_WONT, curByte);
-                }
-                suppressGoAhead = false;
-                willSuppressGaRequested = false;
-                break;
-            default: // unrecognized option
-                // DON'T is the default for any option, so we shouldn't reply
-                break;
+        case OPTION_ECHO: // DON'T ECHO
+            // We don't ever request DON'T ECHO, so this must be a request
+            if (echoInput) {
+                sendOption(CMD_WONT, OPTION_ECHO);
+            }
+            echoInput = false;
+            break;
+        case OPTION_SUPPRESS_GO_AHEAD: // DON'T SUPPRESS-GO-AHEAD
+            if (!willSuppressGaRequested && suppressGoAhead) {
+                // This is a request which changes our state, send a reply
+                sendOption(CMD_WONT, curByte);
+            }
+            suppressGoAhead = false;
+            willSuppressGaRequested = false;
+            break;
+        default: // unrecognized option
+            // DON'T is the default for any option, so we shouldn't reply
+            break;
         }
 
         finishTelnetCommand();

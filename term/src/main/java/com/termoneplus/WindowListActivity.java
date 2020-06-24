@@ -34,7 +34,7 @@ import jackpal.androidterm.util.SessionList;
 
 
 public class WindowListActivity extends AppCompatActivity
-        implements WindowListFragment.OnItemSelectedListener {
+    implements WindowListFragment.OnItemSelectedListener {
 
     private final ServiceConnection service_connection = new ServiceConnection() {
         @Override

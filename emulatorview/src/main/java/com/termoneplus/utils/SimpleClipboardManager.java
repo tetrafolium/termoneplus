@@ -28,7 +28,7 @@ public class SimpleClipboardManager {
 
     public SimpleClipboardManager(Context context) {
         clip = (ClipboardManager) context.getApplicationContext()
-                .getSystemService(Context.CLIPBOARD_SERVICE);
+               .getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     public CharSequence getText() {

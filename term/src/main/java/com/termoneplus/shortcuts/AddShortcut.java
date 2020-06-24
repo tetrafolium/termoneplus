@@ -82,32 +82,32 @@ public class AddShortcut extends AppCompatActivity {
                 String s;
                 if (cmd_name.getText().toString().equals("")
                         && !(s = cmd_param.getText().toString()).equals("")
-                        )
+                   )
                     cmd_name.setText(s.split("\\s")[0]);
             }
         });
 
         Button btn_cmd_path = shortcut_view.findViewById(R.id.btn_cmd_path);
         btn_cmd_path.setOnClickListener(
-                view -> {
-                    Intent pickerIntent = new Intent(Intent.ACTION_PICK)
-                            .putExtra("CONTENT_TYPE", "*/*");
+        view -> {
+            Intent pickerIntent = new Intent(Intent.ACTION_PICK)
+            .putExtra("CONTENT_TYPE", "*/*");
 
-                    pickerIntent.putExtra("TITLE", getString(R.string.addshortcut_button_find_command));
+            pickerIntent.putExtra("TITLE", getString(R.string.addshortcut_button_find_command));
 
-                    String lastPath = preferences.getString("lastPath", null);
-                    if (lastPath != null)
-                        pickerIntent.putExtra("COMMAND_PATH", lastPath);
+            String lastPath = preferences.getString("lastPath", null);
+            if (lastPath != null)
+                pickerIntent.putExtra("COMMAND_PATH", lastPath);
 
-                    try {
-                        startActivityForResult(pickerIntent, REQUEST_FIND_COMMAND);
-                    } catch (Exception e) {
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Failed to launch pick action!", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }
-                }
+            try {
+                startActivityForResult(pickerIntent, REQUEST_FIND_COMMAND);
+            } catch (Exception e) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                                             "Failed to launch pick action!", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }
         );
 
         final ImageView cmd_icon = shortcut_view.findViewById(R.id.cmd_icon);
@@ -115,34 +115,34 @@ public class AddShortcut extends AppCompatActivity {
 
         Button btn_cmd_icon = shortcut_view.findViewById(R.id.btn_cmd_icon);
         btn_cmd_icon.setOnClickListener(
-                view -> new ColorValue(AddShortcut.this, cmd_icon, iconText));
+            view -> new ColorValue(AddShortcut.this, cmd_icon, iconText));
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(shortcut_view);
         alert.setTitle(getString(R.string.addshortcut_title));
         alert.setPositiveButton(android.R.string.yes,
-                (dialog, which) -> buildShortcut(
-                        AddShortcut.this,
-                        path,
-                        cmd_param.getText().toString(),
-                        cmd_name.getText().toString(),
-                        iconText[1],
-                        (Integer) cmd_icon.getTag()
-                )
-        );
+                                (dialog, which) -> buildShortcut(
+                                    AddShortcut.this,
+                                    path,
+                                    cmd_param.getText().toString(),
+                                    cmd_name.getText().toString(),
+                                    iconText[1],
+                                    (Integer) cmd_icon.getTag()
+                                )
+                               );
         alert.setNegativeButton(android.R.string.cancel,
-                (dialog, which) -> finish()
-        );
+                                (dialog, which) -> finish()
+                               );
         alert.show();
     }
 
     private void buildShortcut(
-            Context context,
-            String path,
-            String arguments,
-            String shortcutName,
-            String shortcutText,
-            int shortcutColor
+        Context context,
+        String path,
+        String arguments,
+        String shortcutName,
+        String shortcutText,
+        int shortcutColor
     ) {
         // Apply workarounds for SecureRandom bugs in Android < 4.4
         PRNGFixes.apply();
@@ -191,8 +191,8 @@ public class AddShortcut extends AppCompatActivity {
             wrapper.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
         else
             wrapper.putExtra(
-                    Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-                    Intent.ShortcutIconResource.fromContext(context, R.mipmap.ic_launcher)
+                Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(context, R.mipmap.ic_launcher)
             );
 
         setResult(RESULT_OK, wrapper);
@@ -203,40 +203,40 @@ public class AddShortcut extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case REQUEST_FIND_COMMAND: {
-                if (resultCode != RESULT_OK) break;
-                if (data == null) break;
+        case REQUEST_FIND_COMMAND: {
+            if (resultCode != RESULT_OK) break;
+            if (data == null) break;
 
-                {
-                    Uri uri = data.getData();
-                    if (uri == null) break;
-                    path = uri.getPath();
-                }
-                if (path == null) {
-                    finish();
-                    break;
-                }
-
-                preferences.edit().putString("lastPath", path).commit();
-
-                {
-                    EditText cmd_path = shortcut_view.findViewById(R.id.cmd_path);
-                    cmd_path.setText(path);
-                }
-
-                String name = path.replaceAll(".*/", "");
-
-                {
-                    EditText cmd_name = shortcut_view.findViewById(R.id.cmd_name);
-                    if (cmd_name.getText().toString().equals(""))
-                        cmd_name.setText(name);
-                }
-
-                if (iconText[0] != null && iconText[0].equals(""))
-                    iconText[0] = name;
-
+            {
+                Uri uri = data.getData();
+                if (uri == null) break;
+                path = uri.getPath();
+            }
+            if (path == null) {
+                finish();
                 break;
             }
+
+            preferences.edit().putString("lastPath", path).commit();
+
+            {
+                EditText cmd_path = shortcut_view.findViewById(R.id.cmd_path);
+                cmd_path.setText(path);
+            }
+
+            String name = path.replaceAll(".*/", "");
+
+            {
+                EditText cmd_name = shortcut_view.findViewById(R.id.cmd_name);
+                if (cmd_name.getText().toString().equals(""))
+                    cmd_name.setText(name);
+            }
+
+            if (iconText[0] != null && iconText[0].equals(""))
+                iconText[0] = name;
+
+            break;
+        }
         }
     }
 }

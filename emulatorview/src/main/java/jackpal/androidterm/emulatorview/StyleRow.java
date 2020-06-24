@@ -82,7 +82,7 @@ final class StyleRow {
         int index = 3 * column;
         byte[] line = mData;
         return line[index] & 0xff | (line[index+1] & 0xff) << 8
-                | (line[index+2] & 0xff) << 16;
+               | (line[index+2] & 0xff) << 16;
     }
 
     private void setStyle(int column, int value) {

@@ -33,9 +33,9 @@ public final class RunShortcut extends RemoteInterface {
     @Override
     protected void processAction(@NonNull Intent intent, @NonNull String action) {
         switch (action) {
-            case Application.ACTION_RUN_SHORTCUT:
-                runShortcut(intent);
-                break;
+        case Application.ACTION_RUN_SHORTCUT:
+            runShortcut(intent);
+            break;
         }
     }
 

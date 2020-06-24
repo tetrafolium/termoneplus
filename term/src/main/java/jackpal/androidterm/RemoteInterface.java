@@ -76,13 +76,13 @@ public class RemoteInterface extends RemoteActionActivity {
                     return;
                 }
                 switch (scheme) {
-                    case "file": {
-                        String path = uri.getPath();
-                        File file = new File(path);
-                        String dirPath = file.isDirectory() ? path : file.getParent();
-                        openNewWindow("cd " + quoteForBash(dirPath));
-                        return;
-                    }
+                case "file": {
+                    String path = uri.getPath();
+                    File file = new File(path);
+                    String dirPath = file.isDirectory() ? path : file.getParent();
+                    openNewWindow("cd " + quoteForBash(dirPath));
+                    return;
+                }
                 }
             }
         }
@@ -110,8 +110,8 @@ public class RemoteInterface extends RemoteActionActivity {
             ((GenericTermSession) session).setHandle(handle);
 
             Intent intent = new Intent(this, TermActivity.class)
-                    .setAction(Application.ACTION_OPEN_NEW_WINDOW)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            .setAction(Application.ACTION_OPEN_NEW_WINDOW)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
             return handle;
@@ -146,9 +146,9 @@ public class RemoteInterface extends RemoteActionActivity {
         }
 
         Intent intent = new Intent(this, TermActivity.class)
-                .setAction(Application.ACTION_SWITCH_WINDOW)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .putExtra(Application.ARGUMENT_TARGET_WINDOW, index);
+        .setAction(Application.ACTION_SWITCH_WINDOW)
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        .putExtra(Application.ARGUMENT_TARGET_WINDOW, index);
         startActivity(intent);
 
         return handle;

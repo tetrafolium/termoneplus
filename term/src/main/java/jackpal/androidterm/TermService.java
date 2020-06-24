@@ -146,14 +146,14 @@ public class TermService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
                 NOTIFICATION_CHANNEL_APPLICATION)
-                .setSmallIcon(R.drawable.ic_stat_service_notification_icon)
-                .setContentTitle(getText(R.string.application_terminal))
-                .setContentText(getText(R.string.service_notify_text))
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setTicker(getText(R.string.service_notify_text))
-                .setWhen(System.currentTimeMillis())
-                .setContentIntent(pendingIntent);
+        .setSmallIcon(R.drawable.ic_stat_service_notification_icon)
+        .setContentTitle(getText(R.string.application_terminal))
+        .setContentText(getText(R.string.service_notify_text))
+        .setCategory(NotificationCompat.CATEGORY_SERVICE)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setTicker(getText(R.string.service_notify_text))
+        .setWhen(System.currentTimeMillis())
+        .setContentIntent(pendingIntent);
         return builder.build();
     }
 
@@ -170,9 +170,9 @@ public class TermService extends Service {
         private static class Compat26 {
             private static void create(TermService service) {
                 NotificationChannel channel = new NotificationChannel(
-                        NOTIFICATION_CHANNEL_APPLICATION,
-                        "TermOnePlus",
-                        NotificationManager.IMPORTANCE_LOW);
+                    NOTIFICATION_CHANNEL_APPLICATION,
+                    "TermOnePlus",
+                    NotificationManager.IMPORTANCE_LOW);
                 channel.setDescription("TermOnePlus running notification");
                 channel.setShowBadge(false);
 
@@ -200,14 +200,14 @@ public class TermService extends Service {
 
             // distinct Intent Uri and PendingIntent requestCode must be sufficient to avoid collisions
             final Intent switchIntent = new Intent()
-                    .setClassName(Application.ID, Term.class.getName())
-                    .setAction(Application.ACTION_OPEN_NEW_WINDOW)
-                    .setData(Uri.parse(sessionHandle))
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .putExtra(Application.ARGUMENT_TARGET_WINDOW, sessionHandle);
+            .setClassName(Application.ID, Term.class.getName())
+            .setAction(Application.ACTION_OPEN_NEW_WINDOW)
+            .setData(Uri.parse(sessionHandle))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .putExtra(Application.ARGUMENT_TARGET_WINDOW, sessionHandle);
 
             final PendingIntent result = PendingIntent.getActivity(getApplicationContext(), sessionHandle.hashCode(),
-                    switchIntent, 0);
+                                         switchIntent, 0);
 
             final PackageManager pm = getPackageManager();
             final String[] pkgs = pm.getPackagesForUid(getCallingUid());
@@ -240,7 +240,7 @@ public class TermService extends Service {
                                 addSession(session, new RBinderCleanupCallback(result, callback));
                             } catch (Exception whatWentWrong) {
                                 Log.e("TermService", "Failed to bootstrap AIDL session: "
-                                        + whatWentWrong.getMessage());
+                                      + whatWentWrong.getMessage());
 
                                 if (session != null)
                                     session.finish();

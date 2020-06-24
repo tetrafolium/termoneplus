@@ -111,8 +111,8 @@ public class TermActivity extends AppCompatActivity {
         TermSession session;
 
         if (sessionType != null && sessionType.equals("telnet")) {
-                        /* Telnet connection: we need to do the network connect on a
-               separate thread, so kick that off and wait for it to finish. */
+            /* Telnet connection: we need to do the network connect on a
+            separate thread, so kick that off and wait for it to finish. */
             connectToTelnet(myIntent.getStringExtra("host"));
             return;
         } else {
@@ -184,7 +184,7 @@ public class TermActivity extends AppCompatActivity {
                 new ProcessBuilder(execPath, "/system/bin/sh", "-");
         */
         ProcessBuilder execBuild =
-                new ProcessBuilder("/system/bin/sh", "-");
+            new ProcessBuilder("/system/bin/sh", "-");
         execBuild.redirectErrorStream(true);
         Process exec = null;
         try {
@@ -251,7 +251,7 @@ public class TermActivity extends AppCompatActivity {
                 // Notify the main thread of the connection
                 mHandler.sendEmptyMessage(MSG_CONNECTED);
             }
-        }.start();
+        } .start();
     }
 
     /* Create the TermSession which will handle the Telnet protocol and

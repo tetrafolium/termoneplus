@@ -42,15 +42,15 @@ public class WrapOpenURL {
                 context.startActivity(intent);
             } catch (android.content.ActivityNotFoundException e) {
                 alert(context,
-                        android.R.drawable.ic_dialog_alert,
-                        "Failed to launch view action!"
-                );
+                      android.R.drawable.ic_dialog_alert,
+                      "Failed to launch view action!"
+                     );
             }
         } else {
             alert(context,
-                    android.R.drawable.ic_dialog_info,
-                    "Missing view actions!"
-            );
+                  android.R.drawable.ic_dialog_info,
+                  "Missing view actions!"
+                 );
         }
     }
 
@@ -69,18 +69,18 @@ public class WrapOpenURL {
         Class clazz = FragmentActivity.class;
         if (clazz.isInstance(context)) {
             new androidx.appcompat.app.AlertDialog.Builder(context)
-                    .setTitle(android.R.string.dialog_alert_title)
-                    .setIcon(iconId)
-                    .setMessage(message)
-                    .setNeutralButton(android.R.string.ok, null)
-                    .create().show();
+            .setTitle(android.R.string.dialog_alert_title)
+            .setIcon(iconId)
+            .setMessage(message)
+            .setNeutralButton(android.R.string.ok, null)
+            .create().show();
         } else {
             new AlertDialog.Builder(context)
-                    .setTitle(android.R.string.dialog_alert_title)
-                    .setIcon(iconId)
-                    .setMessage(message)
-                    .setNeutralButton(android.R.string.ok, null)
-                    .create().show();
+            .setTitle(android.R.string.dialog_alert_title)
+            .setIcon(iconId)
+            .setMessage(message)
+            .setNeutralButton(android.R.string.ok, null)
+            .create().show();
         }
     }
 }

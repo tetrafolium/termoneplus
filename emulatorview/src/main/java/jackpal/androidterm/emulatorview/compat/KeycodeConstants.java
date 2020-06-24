@@ -2,14 +2,14 @@ package jackpal.androidterm.emulatorview.compat;
 
 /**
  * Keycode constants and modifier masks for use with keyboard event listeners.
- * 
+ *
  * The Meta masks (ctrl, alt, shift, and meta) are used as follows:
  *     KeyEvent keyEvent = ...;
  *     boolean isCtrlPressed = (keyEvent.getMetaState() & META_CTRL_ON) != 0
  *
  * Contains the complete set of Android key codes that were defined as of the 2.3 API.
  * We could pull in the constants from the 2.3 API, but then we would need to raise the
- * SDK minVersion in the manifest. We want to keep compatibility with Android 1.6, 
+ * SDK minVersion in the manifest. We want to keep compatibility with Android 1.6,
  * and raising this level could result in the accidental use of a newer API.
  */
 public class KeycodeConstants {

@@ -50,7 +50,7 @@ public class ShellTermSession extends GenericTermSession {
 
     public ShellTermSession(TermSettings settings, PathSettings path_settings, String initialCommand) throws IOException {
         super(ParcelFileDescriptor.open(new File("/dev/ptmx"), ParcelFileDescriptor.MODE_READ_WRITE),
-                settings, false);
+              settings, false);
 
         mInitialCommand = initialCommand;
 

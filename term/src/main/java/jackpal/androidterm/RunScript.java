@@ -39,10 +39,10 @@ public final class RunScript extends RemoteInterface {
     @Override
     protected void processAction(@NonNull Intent intent, @NonNull String action) {
         switch (action) {
-            case Application.ACTION_RUN_SCRIPT:
-                /* Someone with the appropriate permissions has asked us to run a script */
-                runScript(intent);
-                break;
+        case Application.ACTION_RUN_SCRIPT:
+            /* Someone with the appropriate permissions has asked us to run a script */
+            runScript(intent);
+            break;
         }
     }
 
@@ -57,17 +57,17 @@ public final class RunScript extends RemoteInterface {
             if (s != null) s = s.toLowerCase();
             if (s != null) {
                 switch (s) {
-                    case "file":
-                        command = uri.getPath();
-                        if (TextUtils.isEmpty(command)) break;
+                case "file":
+                    command = uri.getPath();
+                    if (TextUtils.isEmpty(command)) break;
 
-                        command = quoteForBash(command);
+                    command = quoteForBash(command);
 
-                        // consider scheme fragment as command arguments
-                        s = uri.getFragment();
-                        if (s != null)
-                            command += " " + s;
-                        break;
+                    // consider scheme fragment as command arguments
+                    s = uri.getFragment();
+                    if (s != null)
+                        command += " " + s;
+                    break;
                     // TODO "context" scheme
                 }
             }

@@ -85,7 +85,7 @@ import jackpal.androidterm.util.TermSettings;
  * A terminal emulator activity.
  */
 public class Term extends AppCompatActivity
-        implements UpdateCallback, SharedPreferences.OnSharedPreferenceChangeListener {
+    implements UpdateCallback, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final int REQUEST_CHOOSE_WINDOW = 1;
     /**
      * The name of the ViewFlipper in the resources.
@@ -190,9 +190,9 @@ public class Term extends AppCompatActivity
     private Handler mHandler = new Handler();
 
     protected static TermSession createTermSession(
-            Context context,
-            TermSettings settings, PathSettings path_settings,
-            String initialCommand) throws IOException {
+        Context context,
+        TermSettings settings, PathSettings path_settings,
+        String initialCommand) throws IOException {
         GenericTermSession session = new ShellTermSession(settings, path_settings, initialCommand);
         // XXX We should really be able to fetch this from within TermSession
         session.setProcessExitMessage(context.getString(R.string.process_exit_message));
@@ -228,7 +228,7 @@ public class Term extends AppCompatActivity
         });
 
         PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
+        .registerOnSharedPreferenceChangeListener(this);
 
         TSIntent = new Intent(this, TermService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
@@ -237,7 +237,7 @@ public class Term extends AppCompatActivity
             startService(TSIntent);
 
         mActionBar = TermActionBar.setTermContentView(this,
-                mActionBarMode == TermSettings.ACTION_BAR_MODE_HIDES);
+                     mActionBarMode == TermSettings.ACTION_BAR_MODE_HIDES);
         mActionBar.setOnItemSelectedListener(position -> {
             int oldPosition = mViewFlipper.getDisplayedChild();
             if (position == oldPosition) return;
@@ -287,7 +287,7 @@ public class Term extends AppCompatActivity
                 mTermService.addSession(createTermSession());
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(),
-                        "Failed to start terminal session", Toast.LENGTH_LONG).show();
+                               "Failed to start terminal session", Toast.LENGTH_LONG).show();
                 finish();
                 return;
             }
@@ -334,7 +334,7 @@ public class Term extends AppCompatActivity
         super.onDestroy();
 
         PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
+        .unregisterOnSharedPreferenceChangeListener(this);
 
         if (mStopServiceOnFinish) {
             stopService(TSIntent);
@@ -362,7 +362,7 @@ public class Term extends AppCompatActivity
         emulatorView.setExtGestureListener(new EmulatorViewGestureListener(emulatorView));
         emulatorView.setOnKeyListener(mKeyListener);
         emulatorView.setOnToggleSelectingTextListener(
-                () -> mActionBar.lockDrawer(emulatorView.getSelectingText()));
+            () -> mActionBar.lockDrawer(emulatorView.getSelectingText()));
         registerForContextMenu(emulatorView);
 
         return emulatorView;
@@ -456,7 +456,7 @@ public class Term extends AppCompatActivity
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(token, 0);
             }
-        }.start();
+        } .start();
     }
 
     @Override
@@ -481,7 +481,7 @@ public class Term extends AppCompatActivity
 
     private boolean checkHaveFullHwKeyboard(Configuration c) {
         return (c.keyboard == Configuration.KEYBOARD_QWERTY)
-                && (c.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO);
+               && (c.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO);
     }
 
     @Override
@@ -536,21 +536,21 @@ public class Term extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.nav_window_list:
-                startActivityForResult(new Intent(this, WindowListActivity.class), REQUEST_CHOOSE_WINDOW);
-                return true;
-            case R.id.nav_preferences:
-                doPreferences();
-                return true;
-            case R.id.nav_special_keys:
-                doDocumentKeys();
-                return true;
-            case R.id.nav_action_help:
-                WrapOpenURL.launch(this, R.string.help_url);
-                return true;
-            case R.id.nav_send_email:
-                doEmailTranscript();
-                return true;
+        case R.id.nav_window_list:
+            startActivityForResult(new Intent(this, WindowListActivity.class), REQUEST_CHOOSE_WINDOW);
+            return true;
+        case R.id.nav_preferences:
+            doPreferences();
+            return true;
+        case R.id.nav_special_keys:
+            doDocumentKeys();
+            return true;
+        case R.id.nav_action_help:
+            WrapOpenURL.launch(this, R.string.help_url);
+            return true;
+        case R.id.nav_send_email:
+            doEmailTranscript();
+            return true;
         }
         return false;
     }
@@ -573,7 +573,7 @@ public class Term extends AppCompatActivity
             mViewFlipper.setDisplayedChild(mViewFlipper.getChildCount() - 1);
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(),
-                    "Failed to create a session", Toast.LENGTH_SHORT).show();
+                           "Failed to create a session", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -608,40 +608,40 @@ public class Term extends AppCompatActivity
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
         switch (request) {
-            case REQUEST_CHOOSE_WINDOW:
-                if (result == RESULT_OK && data != null) {
-                    int position = data.getIntExtra(Application.ARGUMENT_WINDOW_ID, -2);
-                    if (position >= 0) {
-                        // Switch windows after session list is in sync, not here
-                        onResumeSelectWindow = position;
-                    } else if (position == -1) {
-                        // NOTE do not create new windows (view) here as launch of a
-                        // activity cleans indirectly view flipper - see method onStop.
-                        // Create only new session and then on service connection view
-                        // flipper and etc. will be updated...
-                        //doCreateNewWindow();
-                        if (mTermService != null) {
-                            try {
-                                TermSession session = createTermSession();
-                                mTermService.addSession(session);
-                                onResumeSelectWindow = mTermService.getSessionCount() - 1;
-                            } catch (IOException e) {
-                                Toast.makeText(this.getApplicationContext(),
-                                        "Failed to create a session", Toast.LENGTH_SHORT).show();
-                                onResumeSelectWindow = -1;
-                            }
-                        } else
+        case REQUEST_CHOOSE_WINDOW:
+            if (result == RESULT_OK && data != null) {
+                int position = data.getIntExtra(Application.ARGUMENT_WINDOW_ID, -2);
+                if (position >= 0) {
+                    // Switch windows after session list is in sync, not here
+                    onResumeSelectWindow = position;
+                } else if (position == -1) {
+                    // NOTE do not create new windows (view) here as launch of a
+                    // activity cleans indirectly view flipper - see method onStop.
+                    // Create only new session and then on service connection view
+                    // flipper and etc. will be updated...
+                    //doCreateNewWindow();
+                    if (mTermService != null) {
+                        try {
+                            TermSession session = createTermSession();
+                            mTermService.addSession(session);
+                            onResumeSelectWindow = mTermService.getSessionCount() - 1;
+                        } catch (IOException e) {
+                            Toast.makeText(this.getApplicationContext(),
+                                           "Failed to create a session", Toast.LENGTH_SHORT).show();
                             onResumeSelectWindow = -1;
-                    }
-                } else {
-                    // Close the activity if user closed all sessions
-                    // TODO the left path will be invoked when nothing happened, but this Activity was destroyed!
-                    if (mTermService == null || mTermService.getSessionCount() == 0) {
-                        mStopServiceOnFinish = true;
-                        finish();
-                    }
+                        }
+                    } else
+                        onResumeSelectWindow = -1;
                 }
-                break;
+            } else {
+                // Close the activity if user closed all sessions
+                // TODO the left path will be invoked when nothing happened, but this Activity was destroyed!
+                if (mTermService == null || mTermService.getSessionCount() == 0) {
+                    mStopServiceOnFinish = true;
+                    finish();
+                }
+            }
+            break;
         }
     }
 
@@ -662,15 +662,15 @@ public class Term extends AppCompatActivity
         // huge number simply opens new window
         // TODO: add a way to restrict max number of windows per caller (possibly via reusing BoundSession)
         switch (action) {
-            case Application.ACTION_OPEN_NEW_WINDOW:
-                onResumeSelectWindow = Integer.MAX_VALUE;
-                break;
-            case Application.ACTION_SWITCH_WINDOW:
-                int target = intent.getIntExtra(Application.ARGUMENT_TARGET_WINDOW, -1);
-                if (target >= 0) {
-                    onResumeSelectWindow = target;
-                }
-                break;
+        case Application.ACTION_OPEN_NEW_WINDOW:
+            onResumeSelectWindow = Integer.MAX_VALUE;
+            break;
+        case Application.ACTION_SWITCH_WINDOW:
+            int target = intent.getIntExtra(Application.ARGUMENT_TARGET_WINDOW, -1);
+            if (target >= 0) {
+                onResumeSelectWindow = target;
+            }
+            break;
         }
     }
 
@@ -709,55 +709,55 @@ public class Term extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case SELECT_TEXT_ID:
-                getCurrentEmulatorView().toggleSelectingText();
-                return true;
-            case COPY_ALL_ID:
-                doCopyAll();
-                return true;
-            case PASTE_ID:
-                doPaste();
-                return true;
-            case SEND_CONTROL_KEY_ID:
-                doSendControlKey();
-                return true;
-            case SEND_FN_KEY_ID:
-                doSendFnKey();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        case SELECT_TEXT_ID:
+            getCurrentEmulatorView().toggleSelectingText();
+            return true;
+        case COPY_ALL_ID:
+            doCopyAll();
+            return true;
+        case PASTE_ID:
+            doPaste();
+            return true;
+        case SEND_CONTROL_KEY_ID:
+            doSendControlKey();
+            return true;
+        case SEND_FN_KEY_ID:
+            doSendFnKey();
+            return true;
+        default:
+            return super.onContextItemSelected(item);
         }
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                if (mActionBarMode == TermSettings.ACTION_BAR_MODE_HIDES && mActionBar.isShowing()) {
-                    mActionBar.hide();
-                    return true;
-                }
-                switch (mSettings.getBackKeyAction()) {
-                    case TermSettings.BACK_KEY_STOPS_SERVICE:
-                        mStopServiceOnFinish = true;
-                    case TermSettings.BACK_KEY_CLOSES_ACTIVITY:
-                        finish();
-                        return true;
-                    case TermSettings.BACK_KEY_CLOSES_WINDOW:
-                        doCloseWindow();
-                        return true;
-                    default:
-                        return false;
-                }
-            case KeyEvent.KEYCODE_MENU:
-                if (!mActionBar.isShowing()) {
-                    mActionBar.show();
-                    return true;
-                } else {
-                    return super.onKeyUp(keyCode, event);
-                }
+        case KeyEvent.KEYCODE_BACK:
+            if (mActionBarMode == TermSettings.ACTION_BAR_MODE_HIDES && mActionBar.isShowing()) {
+                mActionBar.hide();
+                return true;
+            }
+            switch (mSettings.getBackKeyAction()) {
+            case TermSettings.BACK_KEY_STOPS_SERVICE:
+                mStopServiceOnFinish = true;
+            case TermSettings.BACK_KEY_CLOSES_ACTIVITY:
+                finish();
+                return true;
+            case TermSettings.BACK_KEY_CLOSES_WINDOW:
+                doCloseWindow();
+                return true;
             default:
+                return false;
+            }
+        case KeyEvent.KEYCODE_MENU:
+            if (!mActionBar.isShowing()) {
+                mActionBar.show();
+                return true;
+            } else {
                 return super.onKeyUp(keyCode, event);
+            }
+        default:
+            return super.onKeyUp(keyCode, event);
         }
     }
 
@@ -792,37 +792,37 @@ public class Term extends AppCompatActivity
 
         if (Permissions.shouldShowExternalStorageRationale(this)) {
             Snackbar.make(
-                    mViewFlipper,
-                    R.string.message_external_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.yes,
-                            view -> Permissions.requestPermissionExternalStorage(
-                                    this,
-                                    Permissions.REQUEST_EXTERNAL_STORAGE))
-                    .show();
+                mViewFlipper,
+                R.string.message_external_storage_rationale,
+                Snackbar.LENGTH_INDEFINITE)
+            .setAction(android.R.string.yes,
+                       view -> Permissions.requestPermissionExternalStorage(
+                           this,
+                           Permissions.REQUEST_EXTERNAL_STORAGE))
+            .show();
         } else
             Permissions.requestPermissionExternalStorage(
-                    this,
-                    Permissions.REQUEST_EXTERNAL_STORAGE);
+                this,
+                Permissions.REQUEST_EXTERNAL_STORAGE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Permissions.REQUEST_EXTERNAL_STORAGE: {
-                if (Permissions.isPermissionGranted(grantResults)) {
-                    Snackbar.make(mViewFlipper,
-                            R.string.message_external_storage_granted,
-                            Snackbar.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Snackbar.make(mViewFlipper,
-                            R.string.message_external_storage_not_granted,
-                            Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                return;
+        case Permissions.REQUEST_EXTERNAL_STORAGE: {
+            if (Permissions.isPermissionGranted(grantResults)) {
+                Snackbar.make(mViewFlipper,
+                              R.string.message_external_storage_granted,
+                              Snackbar.LENGTH_SHORT)
+                .show();
+            } else {
+                Snackbar.make(mViewFlipper,
+                              R.string.message_external_storage_not_granted,
+                              Snackbar.LENGTH_SHORT)
+                .show();
             }
+            return;
+        }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -855,8 +855,8 @@ public class Term extends AppCompatActivity
         // wants to handle the intent.
         String addr = "user@example.com";
         Intent intent =
-                new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"
-                        + addr));
+            new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"
+                       + addr));
 
         String subject = getString(R.string.email_transcript_subject);
         String title = session.getTitle();
@@ -865,14 +865,14 @@ public class Term extends AppCompatActivity
         }
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT,
-                session.getTranscriptText().trim());
+                        session.getTranscriptText().trim());
         try {
             startActivity(Intent.createChooser(intent,
-                    getString(R.string.email_transcript_chooser_title)));
+                                               getString(R.string.email_transcript_chooser_title)));
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getApplicationContext(),
-                    R.string.email_transcript_no_email_activity_found,
-                    Toast.LENGTH_LONG).show();
+                           R.string.email_transcript_no_email_activity_found,
+                           Toast.LENGTH_LONG).show();
         }
     }
 
@@ -910,15 +910,15 @@ public class Term extends AppCompatActivity
         Resources r = getResources();
         dialog.setTitle(r.getString(R.string.control_key_dialog_title));
         dialog.setMessage(
-                formatMessage(mSettings.getControlKeyId(), TermSettings.CONTROL_KEY_ID_NONE,
-                        r, R.array.control_keys_short_names,
-                        R.string.control_key_dialog_control_text,
-                        R.string.control_key_dialog_control_disabled_text, "CTRLKEY")
-                        + "\n\n"
-                        + formatMessage(mSettings.getFnKeyId(), TermSettings.FN_KEY_ID_NONE,
-                                r, R.array.fn_keys_short_names,
-                                R.string.control_key_dialog_fn_text,
-                                R.string.control_key_dialog_fn_disabled_text, "FNKEY"));
+            formatMessage(mSettings.getControlKeyId(), TermSettings.CONTROL_KEY_ID_NONE,
+                          r, R.array.control_keys_short_names,
+                          R.string.control_key_dialog_control_text,
+                          R.string.control_key_dialog_control_disabled_text, "CTRLKEY")
+            + "\n\n"
+            + formatMessage(mSettings.getFnKeyId(), TermSettings.FN_KEY_ID_NONE,
+                            r, R.array.fn_keys_short_names,
+                            R.string.control_key_dialog_fn_text,
+                            R.string.control_key_dialog_fn_disabled_text, "FNKEY"));
         dialog.show();
     }
 
@@ -937,7 +937,7 @@ public class Term extends AppCompatActivity
 
     private void doToggleSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
+                                 getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
     }
@@ -962,19 +962,19 @@ public class Term extends AppCompatActivity
 
     private void doUIToggle(int x, int y, int width, int height) {
         switch (mActionBarMode) {
-            case TermSettings.ACTION_BAR_MODE_ALWAYS_VISIBLE:
-                if (!mHaveFullHwKeyboard) {
-                    doToggleSoftKeyboard();
-                }
-                break;
-            case TermSettings.ACTION_BAR_MODE_HIDES:
-                if (mHaveFullHwKeyboard || y < height / 2) {
-                    mActionBar.doToggleActionBar();
-                    return;
-                } else {
-                    doToggleSoftKeyboard();
-                }
-                break;
+        case TermSettings.ACTION_BAR_MODE_ALWAYS_VISIBLE:
+            if (!mHaveFullHwKeyboard) {
+                doToggleSoftKeyboard();
+            }
+            break;
+        case TermSettings.ACTION_BAR_MODE_HIDES:
+            if (mHaveFullHwKeyboard || y < height / 2) {
+                mActionBar.doToggleActionBar();
+                return;
+            } else {
+                doToggleSoftKeyboard();
+            }
+            break;
         }
         getCurrentEmulatorView().requestFocus();
     }

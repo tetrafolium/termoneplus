@@ -40,7 +40,7 @@ public class WindowListFragment extends ListFragment implements AdapterView.OnIt
             listener = (OnItemSelectedListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnItemSelectedListener");
+                                         + " must implement OnItemSelectedListener");
         }
     }
 

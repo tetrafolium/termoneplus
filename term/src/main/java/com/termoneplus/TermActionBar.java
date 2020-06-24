@@ -54,8 +54,8 @@ public class TermActionBar {
 
         drawer = context.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                context, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            context, drawer, toolbar,
+            R.string.navigation_drawer_open, R.string.navigation_drawer_close
         ) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -110,7 +110,7 @@ public class TermActionBar {
     }
 
     public void setOnNavigationItemSelectedListener(
-            NavigationView.OnNavigationItemSelectedListener listener
+        NavigationView.OnNavigationItemSelectedListener listener
     ) {
         nav_view.setNavigationItemSelectedListener(item -> {
             boolean result = listener.onNavigationItemSelected(item);
@@ -157,13 +157,13 @@ public class TermActionBar {
                 Context context = view.getContext();
 
                 InputMethodManager imm = (InputMethodManager)
-                        context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                         context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm == null) return;
 
                 android.os.IBinder token = view.getWindowToken();
                 imm.hideSoftInputFromWindow(token, 0);
             }
-        }.start();
+        } .start();
     }
 
     public interface OnItemSelectedListener {
@@ -178,10 +178,10 @@ public class TermActionBar {
             }
 
             @ColorInt final int[] colors = {
-                    // see header_background
-                    0x78909C /* Blue Gray 50, 400 */,
-                    0x607D8B /* Blue Gray 50, 500 */,
-                    0x455A64 /* Blue Gray 50, 700 */
+                // see header_background
+                0x78909C /* Blue Gray 50, 400 */,
+                0x607D8B /* Blue Gray 50, 500 */,
+                0x455A64 /* Blue Gray 50, 700 */
             };
             TypedValue typedValue = new TypedValue();
             Resources.Theme theme = context.getTheme();

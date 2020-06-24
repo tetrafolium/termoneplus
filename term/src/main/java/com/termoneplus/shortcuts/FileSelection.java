@@ -66,7 +66,7 @@ public class FileSelection extends AppCompatActivity {
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
         }
-        {    // Show the Up button in the action bar.
+        {   // Show the Up button in the action bar.
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null)
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -104,34 +104,34 @@ public class FileSelection extends AppCompatActivity {
         {
             final EditText path_input = findViewById(R.id.path);
             path_input.setOnKeyListener(
-                    (v, keyCode, event) -> {
-                        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                            String path = path_input.getText().toString();
-                            File file = new File(path);
-                            if (!file.exists()) return true;
+            (v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    String path = path_input.getText().toString();
+                    File file = new File(path);
+                    if (!file.exists()) return true;
 
-                            if (file.isDirectory()) {
-                                cwd = file.getAbsolutePath();
-                                adapter.load(file);
-                                adapter.notifyDataSetChanged();
-                                return true;
-                            }
-
-                            setResult(RESULT_OK, getIntent().setData(Uri.fromFile(file)));
-                            finish();
-                            return true;
-                        }
-                        return false;
+                    if (file.isDirectory()) {
+                        cwd = file.getAbsolutePath();
+                        adapter.load(file);
+                        adapter.notifyDataSetChanged();
+                        return true;
                     }
+
+                    setResult(RESULT_OK, getIntent().setData(Uri.fromFile(file)));
+                    finish();
+                    return true;
+                }
+                return false;
+            }
             );
         }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: // Action bar home/up button selected
-                finish();
-                return true;
+        case android.R.id.home: // Action bar home/up button selected
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -143,10 +143,10 @@ public class FileSelection extends AppCompatActivity {
     }
 
     @IntDef({
-            ViewType.ENTRY_PARENT,
-            ViewType.ENTRY_DIRECTORY,
-            ViewType.ENTRY_FILE,
-            ViewType.ENTRY_UNKNOWN
+        ViewType.ENTRY_PARENT,
+        ViewType.ENTRY_DIRECTORY,
+        ViewType.ENTRY_FILE,
+        ViewType.ENTRY_UNKNOWN
     })
     @Retention(RetentionPolicy.SOURCE)
     private @interface ViewType {
@@ -246,29 +246,29 @@ public class FileSelection extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.content_file_selection, parent, false);
+                        .inflate(R.layout.content_file_selection, parent, false);
             ViewHolder holder = new ViewHolder(view);
             ImageView entry_type = view.findViewById(R.id.entry_type);
             switch (viewType) {
-                case ViewType.ENTRY_PARENT: {
-                    entry_type.setImageResource(R.drawable.fs_parent_24dp);
-                    view.setOnClickListener(dir_listener);
-                    break;
-                }
-                case ViewType.ENTRY_DIRECTORY: {
-                    entry_type.setImageResource(R.drawable.fs_directory_24dp);
-                    view.setOnClickListener(dir_listener);
-                    break;
-                }
-                case ViewType.ENTRY_FILE: {
-                    entry_type.setImageResource(R.drawable.fs_file_24dp);
-                    view.setOnClickListener(file_listener);
-                    break;
-                }
-                case ViewType.ENTRY_UNKNOWN: {
-                    entry_type.setImageResource(R.drawable.fs_unknown_24dp);
-                    break;
-                }
+            case ViewType.ENTRY_PARENT: {
+                entry_type.setImageResource(R.drawable.fs_parent_24dp);
+                view.setOnClickListener(dir_listener);
+                break;
+            }
+            case ViewType.ENTRY_DIRECTORY: {
+                entry_type.setImageResource(R.drawable.fs_directory_24dp);
+                view.setOnClickListener(dir_listener);
+                break;
+            }
+            case ViewType.ENTRY_FILE: {
+                entry_type.setImageResource(R.drawable.fs_file_24dp);
+                view.setOnClickListener(file_listener);
+                break;
+            }
+            case ViewType.ENTRY_UNKNOWN: {
+                entry_type.setImageResource(R.drawable.fs_unknown_24dp);
+                break;
+            }
             }
             return holder;
         }

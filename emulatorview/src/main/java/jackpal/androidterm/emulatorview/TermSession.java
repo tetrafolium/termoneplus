@@ -230,7 +230,7 @@ public class TermSession {
     private void notifyNewOutput() {
         Handler writerHandler = mWriterHandler;
         if (writerHandler == null) {
-           /* Writer thread isn't started -- will pick up data once it does */
+            /* Writer thread isn't started -- will pick up data once it does */
             return;
         }
         writerHandler.sendEmptyMessage(NEW_OUTPUT);
@@ -581,7 +581,7 @@ public class TermSession {
                     int offset = 0;
                     while (read > 0) {
                         int written = mByteQueue.write(buffer,
-                                offset, read);
+                                                       offset, read);
                         offset += written;
                         read -= written;
                         handlerMessage(NEW_INPUT);
@@ -591,7 +591,7 @@ public class TermSession {
             } catch (InterruptedException ignored) {
             }
 
-            { // stop producer as well
+            {   // stop producer as well
                 Handler writer = mWriterHandler;
                 mWriterHandler = null;
                 if (writer != null)

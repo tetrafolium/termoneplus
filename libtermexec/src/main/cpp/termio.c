@@ -27,8 +27,8 @@
 
 static void
 termios_setUTF8Input(
-        JNIEnv *env, jobject clazz,
-        jint fd, jboolean flag
+    JNIEnv *env, jobject clazz,
+    jint fd, jboolean flag
 ) {
     struct termios tio;
 
@@ -39,12 +39,12 @@ termios_setUTF8Input(
         return;
     }
 
-/* quoted from termios(3) manual page:
- * c_iflag flag constants:
- * ...
- * IUTF8 (since Linux 2.6.4)
- *   (not in POSIX) Input is UTF8; this allows character-erase to be correctly performed in cooked mode.
- */
+    /* quoted from termios(3) manual page:
+     * c_iflag flag constants:
+     * ...
+     * IUTF8 (since Linux 2.6.4)
+     *   (not in POSIX) Input is UTF8; this allows character-erase to be correctly performed in cooked mode.
+     */
     if (flag) {
         tio.c_iflag |= IUTF8;
     } else {
@@ -59,8 +59,8 @@ termios_setUTF8Input(
 
 static void
 ioctl_setWindowSize(
-        JNIEnv *env, jobject clazz,
-        jint fd, jint row, jint col, jint xpixel, jint ypixel
+    JNIEnv *env, jobject clazz,
+    jint fd, jint row, jint col, jint xpixel, jint ypixel
 ) {
     struct winsize arg;
 
@@ -71,12 +71,12 @@ ioctl_setWindowSize(
     arg.ws_xpixel = (unsigned short) xpixel;
     arg.ws_ypixel = (unsigned short) ypixel;
 
-/* quoted from tty_ioctl(4) manual page:
- * TIOCSWINSZ     const struct winsize *argp
- *   Set window size.
- * ...
- * When the window size changes, a SIGWINCH signal is sent to the foreground process group.
- */
+    /* quoted from tty_ioctl(4) manual page:
+     * TIOCSWINSZ     const struct winsize *argp
+     *   Set window size.
+     * ...
+     * When the window size changes, a SIGWINCH signal is sent to the foreground process group.
+     */
     if (ioctl(fd, TIOCSWINSZ, &arg) != 0) {
         char msg[1024];
 
@@ -89,12 +89,12 @@ ioctl_setWindowSize(
 int
 register_termio(JNIEnv *env) {
     static JNINativeMethod methods[] = {
-            {"setUTF8Input", "(IZ)V", (void *) termios_setUTF8Input},
-            {"setWindowSize", "(IIIII)V", (void *) ioctl_setWindowSize}
+        {"setUTF8Input", "(IZ)V", (void *) termios_setUTF8Input},
+        {"setWindowSize", "(IIIII)V", (void *) ioctl_setWindowSize}
     };
     return register_native(
-            env,
-            "com/termoneplus/TermIO$Native",
-            methods, sizeof(methods) / sizeof(*methods)
-    );
+               env,
+               "com/termoneplus/TermIO$Native",
+               methods, sizeof(methods) / sizeof(*methods)
+           );
 }

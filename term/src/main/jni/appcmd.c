@@ -33,7 +33,7 @@ get_info(const char *info) {
     size_t len, res;
 
     if (snprintf(sockname, sizeof(sockname), SOCKET_PREFIX "%ld", (long) getuid())
-        >= sizeof(sockname))
+            >= sizeof(sockname))
         return 0;
 
     if (snprintf(msg, sizeof(msg), "get %s\n", info) >= sizeof(msg))
@@ -62,7 +62,7 @@ get_info(const char *info) {
 
     ret = 1;
 
-    done:
+done:
     close(sock);
     return ret;
 }

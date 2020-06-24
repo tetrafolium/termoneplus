@@ -41,7 +41,7 @@ public class ThemeManager {
         boolean light_theme = preferences.getBoolean(PREFERENCE_LIGHT_THEME, false);
 
         Toast toast = Toast.makeText(context.getApplicationContext(),
-                "Migrate \"File Selection\" theme mode", Toast.LENGTH_LONG);
+                                     "Migrate \"File Selection\" theme mode", Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
 
@@ -71,18 +71,18 @@ public class ThemeManager {
             mode = context.getResources().getString(R.string.pref_thememode_default);
 
         switch (mode) {
-            case "dark":
-                resid = actionbar ? R.style.AppTheme
-                        : R.style.AppTheme_NoActionBar;
-                break;
-            case "light":
-                resid = actionbar ? R.style.AppTheme_Light
-                        : R.style.AppTheme_Light_NoActionBar;
-                break;
-            case "system":
-                resid = actionbar ? R.style.AppTheme_DayNight
-                        : R.style.AppTheme_DayNight_NoActionBar;
-                break;
+        case "dark":
+            resid = actionbar ? R.style.AppTheme
+                    : R.style.AppTheme_NoActionBar;
+            break;
+        case "light":
+            resid = actionbar ? R.style.AppTheme_Light
+                    : R.style.AppTheme_Light_NoActionBar;
+            break;
+        case "system":
+            resid = actionbar ? R.style.AppTheme_DayNight
+                    : R.style.AppTheme_DayNight_NoActionBar;
+            break;
         }
 
         return resid;

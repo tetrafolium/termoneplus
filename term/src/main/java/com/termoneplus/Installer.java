@@ -35,7 +35,7 @@ public class Installer {
 
         // always preset directory permissions
         return dir.setReadable(true, !share)
-                && dir.setExecutable(true, false);
+               && dir.setExecutable(true, false);
     }
 
     public static boolean install_text_file(String[] script, File file) {
@@ -93,7 +93,7 @@ public class Installer {
 
             // always preset executable permissions
             return target.setReadable(true)
-                    && target.setExecutable(true, false);
+                   && target.setExecutable(true, false);
         } catch (Exception ignore) {
         }
         return false;

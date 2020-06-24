@@ -74,7 +74,7 @@ dup_jobjectArray(JNIEnv *env, jobjectArray list) {
 
     return ret;
 
-    err:
+err:
     for (--k; k >= 0; k--) {
         free(ret[k]);
     }
@@ -85,8 +85,8 @@ dup_jobjectArray(JNIEnv *env, jobjectArray list) {
 
 static pid_t
 process_create_subprocess(
-        JNIEnv *env, jobject clazz,
-        int ptm, char *path, char **argv, char **envp
+    JNIEnv *env, jobject clazz,
+    int ptm, char *path, char **argv, char **envp
 ) {
     pid_t pid;
     char devname[64]; /*match bionic, see libc/unistd/ptsname_r.c*/
@@ -186,8 +186,8 @@ process_create_subprocess(
 
 static jint
 jprocess_create_subprocess(
-        JNIEnv *env, jobject clazz,
-        jint ptm, jbyteArray path_j, jobjectArray argv_j, jobjectArray envp_j
+    JNIEnv *env, jobject clazz,
+    jint ptm, jbyteArray path_j, jobjectArray argv_j, jobjectArray envp_j
 ) {
     int k;
     char *path = NULL, **argv = NULL, **envp = NULL;
@@ -207,7 +207,7 @@ jprocess_create_subprocess(
      */
     return process_create_subprocess(env, clazz, ptm, path, argv, envp);
 
-    err:
+err:
     if (envp != NULL) {
         for (k = 0; envp[k] != NULL; k++)
             free(envp[k]);
@@ -227,8 +227,8 @@ jprocess_create_subprocess(
 
 static jint
 process_wait_exit(
-        JNIEnv *env, jobject clazz,
-        jint pid
+    JNIEnv *env, jobject clazz,
+    jint pid
 ) {
     int wstatus;
     jint result = -1;
@@ -246,8 +246,8 @@ process_wait_exit(
 
 static void
 process_finish_childs(
-        JNIEnv *env, jobject clazz,
-        jint pid
+    JNIEnv *env, jobject clazz,
+    jint pid
 ) {
     (void) env;
     (void) clazz;
@@ -260,13 +260,13 @@ process_finish_childs(
 int
 register_process(JNIEnv *env) {
     static JNINativeMethod methods[] = {
-            {"createSubprocess", "(I[B[[B[[B)I", (void *) jprocess_create_subprocess},
-            {"waitExit",         "(I)I",         (void *) process_wait_exit},
-            {"finishChilds",     "(I)V",         (void *) process_finish_childs}
+        {"createSubprocess", "(I[B[[B[[B)I", (void *) jprocess_create_subprocess},
+        {"waitExit",         "(I)I",         (void *) process_wait_exit},
+        {"finishChilds",     "(I)V",         (void *) process_finish_childs}
     };
     return register_native(
-            env,
-            "com/termoneplus/Process$Native",
-            methods, sizeof(methods) / sizeof(*methods)
-    );
+               env,
+               "com/termoneplus/Process$Native",
+               methods, sizeof(methods) / sizeof(*methods)
+           );
 }

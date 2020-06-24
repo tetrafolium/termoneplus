@@ -69,12 +69,12 @@ public class PathResolver implements UnixSocketServer.ConnectionHandler {
 
         PrintStream out = new PrintStream(baseout);
         switch (line) {
-            case "get aliases":
-                // force interactive shell
-                out.println("alias sh='sh -i'");
+        case "get aliases":
+            // force interactive shell
+            out.println("alias sh='sh -i'");
 
-                printExternalAliases(out);
-                break;
+            printExternalAliases(out);
+            break;
         }
         out.flush();
     }

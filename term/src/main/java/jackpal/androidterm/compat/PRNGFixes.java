@@ -79,18 +79,18 @@ public final class PRNGFixes {
         try {
             // Mix in the device- and invocation-specific seed.
             Class.forName("org.apache.harmony.xnet.provider.jsse.NativeCrypto")
-                    .getMethod("RAND_seed", byte[].class)
-                    .invoke(null, generateSeed());
+            .getMethod("RAND_seed", byte[].class)
+            .invoke(null, generateSeed());
 
             // Mix output of Linux PRNG into OpenSSL's PRNG
             int bytesRead = (Integer) Class.forName(
-                    "org.apache.harmony.xnet.provider.jsse.NativeCrypto")
-                    .getMethod("RAND_load_file", String.class, long.class)
-                    .invoke(null, "/dev/urandom", 1024);
+                                "org.apache.harmony.xnet.provider.jsse.NativeCrypto")
+                            .getMethod("RAND_load_file", String.class, long.class)
+                            .invoke(null, "/dev/urandom", 1024);
             if (bytesRead != 1024) {
                 throw new IOException(
-                        "Unexpected number of bytes read from Linux PRNG: "
-                                + bytesRead);
+                    "Unexpected number of bytes read from Linux PRNG: "
+                    + bytesRead);
             }
         } catch (Exception e) {
             throw new SecurityException("Failed to seed OpenSSL PRNG", e);
@@ -105,7 +105,7 @@ public final class PRNGFixes {
      * @throws SecurityException if the fix is needed but could not be applied.
      */
     private static void installLinuxPRNGSecureRandom()
-            throws SecurityException {
+    throws SecurityException {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2 /*API Level 18*/) {
             // No need to apply the fix
             return;
@@ -114,7 +114,7 @@ public final class PRNGFixes {
         // Install a Linux PRNG-based SecureRandom implementation as the
         // default, if not yet installed.
         Provider[] secureRandomProviders =
-                Security.getProviders("SecureRandom.SHA1PRNG");
+            Security.getProviders("SecureRandom.SHA1PRNG");
         if ((secureRandomProviders == null)
                 || (secureRandomProviders.length < 1)
                 || (!LinuxPRNGSecureRandomProvider.class.equals(
@@ -127,10 +127,10 @@ public final class PRNGFixes {
         // by the Linux PRNG-based SecureRandom implementation.
         SecureRandom rng1 = new SecureRandom();
         if (!LinuxPRNGSecureRandomProvider.class.equals(
-                rng1.getProvider().getClass())) {
+                    rng1.getProvider().getClass())) {
             throw new SecurityException(
-                    "new SecureRandom() backed by wrong Provider: "
-                            + rng1.getProvider().getClass());
+                "new SecureRandom() backed by wrong Provider: "
+                + rng1.getProvider().getClass());
         }
 
         SecureRandom rng2;
@@ -140,10 +140,10 @@ public final class PRNGFixes {
             throw new SecurityException("SHA1PRNG not available", e);
         }
         if (!LinuxPRNGSecureRandomProvider.class.equals(
-                rng2.getProvider().getClass())) {
+                    rng2.getProvider().getClass())) {
             throw new SecurityException(
-                    "SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong"
-                    + " Provider: " + rng2.getProvider().getClass());
+                "SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong"
+                + " Provider: " + rng2.getProvider().getClass());
         }
     }
 
@@ -155,9 +155,9 @@ public final class PRNGFixes {
 
         public LinuxPRNGSecureRandomProvider() {
             super("LinuxPRNG",
-                    1.0,
-                    "A Linux-specific random number provider that uses"
-                        + " /dev/urandom");
+                  1.0,
+                  "A Linux-specific random number provider that uses"
+                  + " /dev/urandom");
             // Although /dev/urandom is not a SHA-1 PRNG, some apps
             // explicitly request a SHA1PRNG SecureRandom and we thus need to
             // prevent them from getting the default implementation whose output
@@ -222,7 +222,7 @@ public final class PRNGFixes {
                 // On a small fraction of devices /dev/urandom is not writable.
                 // Log and ignore.
                 Log.w(PRNGFixes.class.getSimpleName(),
-                        "Failed to mix seed into " + URANDOM_FILE);
+                      "Failed to mix seed into " + URANDOM_FILE);
             } finally {
                 mSeeded = true;
             }
@@ -240,7 +240,7 @@ public final class PRNGFixes {
                 in.readFully(bytes);
             } catch (IOException e) {
                 throw new SecurityException(
-                        "Failed to read from " + URANDOM_FILE, e);
+                    "Failed to read from " + URANDOM_FILE, e);
             }
         }
 
@@ -260,10 +260,10 @@ public final class PRNGFixes {
                     // output being pulled into this process prematurely.
                     try {
                         sUrandomIn = new DataInputStream(
-                                new FileInputStream(URANDOM_FILE));
+                            new FileInputStream(URANDOM_FILE));
                     } catch (IOException e) {
                         throw new SecurityException("Failed to open "
-                                + URANDOM_FILE + " for reading", e);
+                                                    + URANDOM_FILE + " for reading", e);
                     }
                 }
                 return sUrandomIn;
@@ -288,7 +288,7 @@ public final class PRNGFixes {
         try {
             ByteArrayOutputStream seedBuffer = new ByteArrayOutputStream();
             DataOutputStream seedBufferOut =
-                    new DataOutputStream(seedBuffer);
+                new DataOutputStream(seedBuffer);
             seedBufferOut.writeLong(System.currentTimeMillis());
             seedBufferOut.writeLong(System.nanoTime());
             seedBufferOut.writeInt(Process.myPid());

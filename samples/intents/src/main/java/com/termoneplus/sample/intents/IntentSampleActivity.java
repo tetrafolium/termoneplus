@@ -46,7 +46,7 @@ public class IntentSampleActivity extends AppCompatActivity {
         addClickListener(R.id.openNewWindow, v -> {
             // Intent for opening a new window without providing script
             Intent intent = new Intent(ACTION_OPEN_NEW_WINDOW)
-                    .addCategory(Intent.CATEGORY_DEFAULT);
+            .addCategory(Intent.CATEGORY_DEFAULT);
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
@@ -65,8 +65,8 @@ public class IntentSampleActivity extends AppCompatActivity {
                to use */
             String command = script.getText().toString();
             Intent intent = new Intent(ACTION_RUN_SCRIPT)
-                    .addCategory(Intent.CATEGORY_DEFAULT)
-                    .putExtra(ARGUMENT_SHELL_COMMAND, command);
+            .addCategory(Intent.CATEGORY_DEFAULT)
+            .putExtra(ARGUMENT_SHELL_COMMAND, command);
             try {
                 startActivity(intent);
             } catch (SecurityException e) {
@@ -83,8 +83,8 @@ public class IntentSampleActivity extends AppCompatActivity {
                This will open another window if it doesn't find a match */
             String command = script.getText().toString();
             Intent intent = new Intent(ACTION_RUN_SCRIPT)
-                    .addCategory(Intent.CATEGORY_DEFAULT)
-                    .putExtra(ARGUMENT_SHELL_COMMAND, command);
+            .addCategory(Intent.CATEGORY_DEFAULT)
+            .putExtra(ARGUMENT_SHELL_COMMAND, command);
             if (mHandle != null) {
                 // Identify the targeted window by its handle
                 intent.putExtra(ARGUMENT_WINDOW_HANDLE, mHandle);
@@ -123,11 +123,11 @@ public class IntentSampleActivity extends AppCompatActivity {
         } else {
             // OS supports runtime permissions
             Snackbar.make(main_layout,
-                    R.string.error_security_grant,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.yes,
-                            v -> permissionRunScript())
-                    .show();
+                          R.string.error_security_grant,
+                          Snackbar.LENGTH_INDEFINITE)
+            .setAction(android.R.string.yes,
+                       v -> permissionRunScript())
+            .show();
         }
     }
 
@@ -141,11 +141,11 @@ public class IntentSampleActivity extends AppCompatActivity {
             // current thread waiting for the user's response!
             // If the user confirms the explanation, try real request of permission.
             Snackbar.make(main_layout,
-                    R.string.run_script_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.yes,
-                            v -> requestPermissionRunScript())
-                    .show();
+                          R.string.run_script_rationale,
+                          Snackbar.LENGTH_INDEFINITE)
+            .setAction(android.R.string.yes,
+                       v -> requestPermissionRunScript())
+            .show();
         } else {
             // If no explanation needed, application can request the permission.
             requestPermissionRunScript();
@@ -155,8 +155,8 @@ public class IntentSampleActivity extends AppCompatActivity {
     @RequiresApi(23)
     private void requestPermissionRunScript() {
         ActivityCompat.requestPermissions(this,
-                new String[]{PERMISSION_RUN_SCRIPT},
-                REQUEST_PERMISSION_RUN_SCRIPT);
+                                          new String[] {PERMISSION_RUN_SCRIPT},
+                                          REQUEST_PERMISSION_RUN_SCRIPT);
     }
 
     protected void onActivityResult(int request, int result, Intent data) {
@@ -167,7 +167,7 @@ public class IntentSampleActivity extends AppCompatActivity {
         if (request == REQUEST_WINDOW_HANDLE && data != null) {
             mHandle = data.getStringExtra(ARGUMENT_WINDOW_HANDLE);
             ((Button) findViewById(R.id.runScriptSaveWindow)).setText(
-                    R.string.run_script_existing_window);
+                R.string.run_script_existing_window);
         }
     }
 }

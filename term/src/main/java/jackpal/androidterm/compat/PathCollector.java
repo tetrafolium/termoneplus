@@ -60,14 +60,14 @@ public class PathCollector {
 
                 String path = makePathFromBundle(getResultExtras(false));
                 switch (action) {
-                    case ACTION_PATH_PREPEND_BROADCAST:
-                        settings.setPrependPath(path);
-                        break;
-                    case ACTION_PATH_APPEND_BROADCAST:
-                        settings.setAppendPath(path);
-                        break;
-                    default:
-                        return;
+                case ACTION_PATH_PREPEND_BROADCAST:
+                    settings.setPrependPath(path);
+                    break;
+                case ACTION_PATH_APPEND_BROADCAST:
+                    settings.setAppendPath(path);
+                    break;
+                default:
+                    return;
                 }
                 --pending;
 
@@ -80,13 +80,13 @@ public class PathCollector {
         Intent broadcast = new Intent(ACTION_PATH_APPEND_BROADCAST);
         broadcast.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendOrderedBroadcast(broadcast, PERMISSION_PATH_APPEND_BROADCAST,
-                receiver, null, AppCompatActivity.RESULT_OK, null, null);
+                                     receiver, null, AppCompatActivity.RESULT_OK, null, null);
 
         ++pending;
         broadcast = new Intent(broadcast);
         broadcast.setAction(ACTION_PATH_PREPEND_BROADCAST);
         context.sendOrderedBroadcast(broadcast, PERMISSION_PATH_PREPEND_BROADCAST,
-                receiver, null, AppCompatActivity.RESULT_OK, null, null);
+                                     receiver, null, AppCompatActivity.RESULT_OK, null, null);
     }
 
     private static String makePathFromBundle(Bundle extras) {

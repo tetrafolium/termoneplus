@@ -29,7 +29,7 @@ import androidx.preference.PreferenceManager;
 
 
 public class TermPreferencesActivity extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,19 +61,19 @@ public class TermPreferencesActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: // Action bar home button selected
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        case android.R.id.home: // Action bar home button selected
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     private void loadPreferences() {
         // Display the fragment as the main content.
         getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new TermPreferencesFragment())
-                .commit();
+        .replace(android.R.id.content, new TermPreferencesFragment())
+        .commit();
     }
 
     @Override

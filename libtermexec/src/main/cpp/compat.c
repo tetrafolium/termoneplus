@@ -31,7 +31,7 @@ closefrom(int lowfd) {
     int pws_fd = -1;
     DIR *dirp;
 
-    { /* keep android property workspace open */
+    {   /* keep android property workspace open */
         char *pws_env = getenv("ANDROID_PROPERTY_WORKSPACE");
         if (pws_env) {
             /* format "int,int" */
@@ -49,11 +49,11 @@ closefrom(int lowfd) {
         for (dent = readdir(dirp); dent != NULL; dent = readdir(dirp)) {
             fd = strtol(dent->d_name, &endp, 10);
             if (
-                    (dent->d_name != endp) && (*endp == '\0') &&
-                    (fd >= 0) && (fd < INT_MAX) &&
-                    (fd >= lowfd) &&
-                    (fd != pws_fd) && (fd != dir_fd)
-                    )
+                (dent->d_name != endp) && (*endp == '\0') &&
+                (fd >= 0) && (fd < INT_MAX) &&
+                (fd >= lowfd) &&
+                (fd != pws_fd) && (fd != dir_fd)
+            )
                 (void) close((int) fd);
         }
 
