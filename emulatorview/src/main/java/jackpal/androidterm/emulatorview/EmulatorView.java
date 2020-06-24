@@ -68,7 +68,7 @@ private final static boolean LOG_KEY_EVENTS = false;
 private final static boolean LOG_IME = false;
 
 /**
- * We defer some initialization until we have been layed out in the view
+ * We defer some initialization until we have been laid out in the view
  * hierarchy. The boolean tracks when we know what our size is.
  */
 private boolean mKnownSize;
