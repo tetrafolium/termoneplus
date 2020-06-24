@@ -30,8 +30,8 @@ void throwIOException(JNIEnv *env, const char *msg);
 
 int termoneplus_log_print(int prio, const char *fmt, ...);
 #define LOGE(...)                                                              \
-  do {                                                                         \
-    termoneplus_log_print(ANDROID_LOG_ERROR, __VA_ARGS__);                     \
-  } while (0)
+	do {                                                                         \
+		termoneplus_log_print(ANDROID_LOG_ERROR, __VA_ARGS__);                     \
+	} while (0)
 
 #endif /* ndef TERMONEPLUS_REGISTRATION_H */

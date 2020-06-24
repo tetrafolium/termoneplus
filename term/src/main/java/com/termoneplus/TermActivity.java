@@ -23,44 +23,44 @@ import com.termoneplus.utils.WrapOpenURL;
 
 public class TermActivity extends jackpal.androidterm.Term {
 
-  @Override
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                        String key) {
-    // do not process preference "Theme Mode"
-    if (ThemeManager.PREF_THEME_MODE.equals(key))
-      return;
+@Override
+public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                      String key) {
+	// do not process preference "Theme Mode"
+	if (ThemeManager.PREF_THEME_MODE.equals(key))
+		return;
 
-    super.onSharedPreferenceChanged(sharedPreferences, key);
-  }
+	super.onSharedPreferenceChanged(sharedPreferences, key);
+}
 
-  public void onAppIconClicked(View view) {
-    WrapOpenURL.launch(this, urlApplicationSite());
-  }
+public void onAppIconClicked(View view) {
+	WrapOpenURL.launch(this, urlApplicationSite());
+}
 
-  public void onAppTitleClicked(View view) {
-    WrapOpenURL.launch(this, urlApplicationSite());
-  }
+public void onAppTitleClicked(View view) {
+	WrapOpenURL.launch(this, urlApplicationSite());
+}
 
-  public void onEmailAddressClicked(View view) {
-    WrapOpenURL.launch(this, urlApplicationMail());
-  }
+public void onEmailAddressClicked(View view) {
+	WrapOpenURL.launch(this, urlApplicationMail());
+}
 
-  @Override
-  protected void updatePrefs() {
-    Integer theme_resid = getThemeId();
-    if ((theme_resid != null) &&
-        (theme_resid != ThemeManager.presetTheme(this, false, theme_resid))) {
-      restart(R.string.restart_thememode_change);
-      return;
-    }
-    super.updatePrefs();
-  }
+@Override
+protected void updatePrefs() {
+	Integer theme_resid = getThemeId();
+	if ((theme_resid != null) &&
+	    (theme_resid != ThemeManager.presetTheme(this, false, theme_resid))) {
+		restart(R.string.restart_thememode_change);
+		return;
+	}
+	super.updatePrefs();
+}
 
-  private String urlApplicationSite() {
-    return getResources().getString(R.string.application_site);
-  }
+private String urlApplicationSite() {
+	return getResources().getString(R.string.application_site);
+}
 
-  private String urlApplicationMail() {
-    return "mailto:" + getResources().getString(R.string.application_email);
-  }
+private String urlApplicationMail() {
+	return "mailto:" + getResources().getString(R.string.application_email);
+}
 }

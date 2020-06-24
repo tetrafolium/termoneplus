@@ -8,14 +8,16 @@ import android.test.AndroidTestCase;
 
 public class InputConnectionTest extends AndroidTestCase {
 
-  public InputConnectionTest() { super(); }
+public InputConnectionTest() {
+	super();
+}
 
-  public void testBackSpace() {
-    //              MockContext cn = new MockContext();
-    //              MockApplication a = new MockApplication();
-    //              TermSession ts = new TermSession();
-    //              DisplayMetrics m = new DisplayMetrics();
-    //              EmulatorView e = new EmulatorView(cn, ts, m);
-    //              InputConnection c = e.onCreateInputConnection(null);
-  }
+public void testBackSpace() {
+	//              MockContext cn = new MockContext();
+	//              MockApplication a = new MockApplication();
+	//              TermSession ts = new TermSession();
+	//              DisplayMetrics m = new DisplayMetrics();
+	//              EmulatorView e = new EmulatorView(cn, ts, m);
+	//              InputConnection c = e.onCreateInputConnection(null);
+}
 }

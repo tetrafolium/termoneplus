@@ -32,102 +32,104 @@ import jackpal.androidterm.compat.PathSettings;
 import jackpal.androidterm.util.TermSettings;
 
 public class RemoteActionActivity extends AppCompatActivity {
-  protected TermSettings mSettings;
-  protected PathSettings path_settings;
+protected TermSettings mSettings;
+protected PathSettings path_settings;
 
-  private boolean path_collected = false;
-  private TermService term_service = null;
+private boolean path_collected = false;
+private TermService term_service = null;
 
-  private Intent service_intent;
-  private ServiceConnection service_connection = new ServiceConnection() {
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-      term_service = null;
-      if (service == null)
-        return;
+private Intent service_intent;
+private ServiceConnection service_connection = new ServiceConnection() {
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		term_service = null;
+		if (service == null)
+			return;
 
-      TermService.TSBinder binder = (TermService.TSBinder)service;
-      term_service = binder.getService();
+		TermService.TSBinder binder = (TermService.TSBinder)service;
+		term_service = binder.getService();
 
-      processIntent();
-    }
+		processIntent();
+	}
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-      term_service = null;
-    }
-  };
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		term_service = null;
+	}
+};
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
 
-    /* intent is required */
-    Intent intent = getIntent();
-    if (intent == null) {
-      finish();
-      return;
-    }
+	/* intent is required */
+	Intent intent = getIntent();
+	if (intent == null) {
+		finish();
+		return;
+	}
 
-    mSettings = new TermSettings(this);
-    path_settings = new PathSettings(this);
-    PathCollector path_collector = new PathCollector(this, path_settings);
-    path_collector.setOnPathsReceivedListener(() -> {
-      path_collected = true;
+	mSettings = new TermSettings(this);
+	path_settings = new PathSettings(this);
+	PathCollector path_collector = new PathCollector(this, path_settings);
+	path_collector.setOnPathsReceivedListener(()->{
+			path_collected = true;
 
-      processIntent();
-    });
+			processIntent();
+		});
 
-    service_intent = new Intent(this, TermService.class);
-    startService(service_intent);
-  }
+	service_intent = new Intent(this, TermService.class);
+	startService(service_intent);
+}
 
-  @Override
-  protected void onStart() {
-    super.onStart();
+@Override
+protected void onStart() {
+	super.onStart();
 
-    if (!bindService(service_intent, service_connection, BIND_AUTO_CREATE)) {
-      Log.e(Application.APP_TAG, "bind to service failed!");
-      finish();
-    }
-  }
+	if (!bindService(service_intent, service_connection, BIND_AUTO_CREATE)) {
+		Log.e(Application.APP_TAG, "bind to service failed!");
+		finish();
+	}
+}
 
-  @Override
-  protected void onStop() {
-    unbindService(service_connection);
+@Override
+protected void onStop() {
+	unbindService(service_connection);
 
-    super.onStop();
-  }
+	super.onStop();
+}
 
-  @Override
-  protected void onDestroy() {
-    if (term_service != null) {
-      if (term_service.getSessionCount() == 0)
-        stopService(service_intent);
-      term_service = null;
-    }
-    super.onDestroy();
-  }
+@Override
+protected void onDestroy() {
+	if (term_service != null) {
+		if (term_service.getSessionCount() == 0)
+			stopService(service_intent);
+		term_service = null;
+	}
+	super.onDestroy();
+}
 
-  protected TermService getTermService() { return term_service; }
+protected TermService getTermService() {
+	return term_service;
+}
 
-  protected void processAction(@NonNull Intent intent, @NonNull String action) {
-    // nop, override at child level
-  }
+protected void processAction(@NonNull Intent intent, @NonNull String action) {
+	// nop, override at child level
+}
 
-  private void processIntent() {
-    /* process intent after path collection and start of service */
-    if (term_service == null)
-      return;
-    if (!path_collected)
-      return;
+private void processIntent() {
+	/* process intent after path collection and start of service */
+	if (term_service == null)
+		return;
+	if (!path_collected)
+		return;
 
-    /* intent is required - see onCreate() */
-    Intent intent = getIntent();
-    String action = intent.getAction();
-    if (action != null)
-      processAction(intent, action);
+	/* intent is required - see onCreate() */
+	Intent intent = getIntent();
+	String action = intent.getAction();
+	if (action != null)
+		processAction(intent, action);
 
-    finish();
-  }
+	finish();
+}
 }

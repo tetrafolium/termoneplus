@@ -45,278 +45,278 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
 public class FileSelection extends AppCompatActivity {
-  private final String STATE_CWD = "CWD";
+private final String STATE_CWD = "CWD";
 
-  private String cwd; // current working directory
+private String cwd;   // current working directory
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_file_selection);
+	setContentView(R.layout.activity_file_selection);
 
-    setResult(RESULT_CANCELED);
+	setResult(RESULT_CANCELED);
 
-    {
-      Toolbar toolbar = findViewById(R.id.toolbar);
-      setSupportActionBar(toolbar);
-    }
-    { // Show the Up button in the action bar.
-      ActionBar actionBar = getSupportActionBar();
-      if (actionBar != null)
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
+	{
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+	}
+	{ // Show the Up button in the action bar.
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null)
+			actionBar.setDisplayHomeAsUpEnabled(true);
+	}
 
-    Intent intent = getIntent();
+	Intent intent = getIntent();
 
-    if (intent.hasExtra("TITLE"))
-      setTitle(intent.getStringExtra("TITLE"));
+	if (intent.hasExtra("TITLE"))
+		setTitle(intent.getStringExtra("TITLE"));
 
-    if (savedInstanceState == null) {
-      Uri uri = intent.getData();
-      if (uri != null) {
-        cwd = uri.getPath();
-      }
-      if (cwd == null && intent.hasExtra("COMMAND_PATH")) {
-        File path = new File(intent.getStringExtra("COMMAND_PATH"));
-        if (path.isFile())
-          path = path.getParentFile();
-        if (path.isDirectory())
-          cwd = path.getAbsolutePath();
-      }
-    } else {
-      cwd = savedInstanceState.getString(STATE_CWD);
-    }
-    if (cwd == null)
-      cwd = DefaultPath.get(getApplicationContext());
+	if (savedInstanceState == null) {
+		Uri uri = intent.getData();
+		if (uri != null) {
+			cwd = uri.getPath();
+		}
+		if (cwd == null && intent.hasExtra("COMMAND_PATH")) {
+			File path = new File(intent.getStringExtra("COMMAND_PATH"));
+			if (path.isFile())
+				path = path.getParentFile();
+			if (path.isDirectory())
+				cwd = path.getAbsolutePath();
+		}
+	} else {
+		cwd = savedInstanceState.getString(STATE_CWD);
+	}
+	if (cwd == null)
+		cwd = DefaultPath.get(getApplicationContext());
 
-    final Adapter adapter = new Adapter(cwd);
+	final Adapter adapter = new Adapter(cwd);
 
-    {
-      RecyclerView view = findViewById(R.id.directory_list);
-      view.setAdapter(adapter);
-    }
+	{
+		RecyclerView view = findViewById(R.id.directory_list);
+		view.setAdapter(adapter);
+	}
 
-    {
-      final EditText path_input = findViewById(R.id.path);
-      path_input.setOnKeyListener((v, keyCode, event) -> {
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-          String path = path_input.getText().toString();
-          File file = new File(path);
-          if (!file.exists())
-            return true;
+	{
+		final EditText path_input = findViewById(R.id.path);
+		path_input.setOnKeyListener((v, keyCode, event)->{
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+				        String path = path_input.getText().toString();
+				        File file = new File(path);
+				        if (!file.exists())
+						return true;
 
-          if (file.isDirectory()) {
-            cwd = file.getAbsolutePath();
-            adapter.load(file);
-            adapter.notifyDataSetChanged();
-            return true;
-          }
+				        if (file.isDirectory()) {
+				                cwd = file.getAbsolutePath();
+				                adapter.load(file);
+				                adapter.notifyDataSetChanged();
+				                return true;
+					}
 
-          setResult(RESULT_OK, getIntent().setData(Uri.fromFile(file)));
-          finish();
-          return true;
-        }
-        return false;
-      });
-    }
-  }
+				        setResult(RESULT_OK, getIntent().setData(Uri.fromFile(file)));
+				        finish();
+				        return true;
+				}
+				return false;
+			});
+	}
+}
 
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-    case android.R.id.home: // Action bar home/up button selected
-      finish();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
+public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home: // Action bar home/up button selected
+		finish();
+		return true;
+	}
+	return super.onOptionsItemSelected(item);
+}
 
-  @Override
-  protected void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(STATE_CWD, cwd);
-  }
+@Override
+protected void onSaveInstanceState(Bundle outState) {
+	super.onSaveInstanceState(outState);
+	outState.putString(STATE_CWD, cwd);
+}
 
-  @IntDef({ViewType.ENTRY_PARENT, ViewType.ENTRY_DIRECTORY, ViewType.ENTRY_FILE,
-           ViewType.ENTRY_UNKNOWN})
-  @Retention(RetentionPolicy.SOURCE)
-  private @interface ViewType {
-    int ENTRY_PARENT = 0;
-    int ENTRY_DIRECTORY = 1;
-    int ENTRY_FILE = 2;
-    int ENTRY_UNKNOWN = 9; /*broken symbolic link*/
-  }
+@IntDef({ViewType.ENTRY_PARENT, ViewType.ENTRY_DIRECTORY, ViewType.ENTRY_FILE,
+         ViewType.ENTRY_UNKNOWN})
+@Retention(RetentionPolicy.SOURCE)
+private @interface ViewType {
+int ENTRY_PARENT = 0;
+int ENTRY_DIRECTORY = 1;
+int ENTRY_FILE = 2;
+int ENTRY_UNKNOWN = 9;     /*broken symbolic link*/
+}
 
-  private static class DefaultPath {
-    private static String get(Context context) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q /*API Level 29 */)
-        return Compat29.get(context);
-      else
-        return Compat1.get(context);
-    }
+private static class DefaultPath {
+private static String get(Context context) {
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q /*API Level 29 */)
+		return Compat29.get(context);
+	else
+		return Compat1.get(context);
+}
 
-    @RequiresApi(29)
-    static class Compat29 {
-      private static String get(Context context) {
-        // TODO keep backward compatibility with getExternalStorageDirectory()
-        TermSettings settings = new TermSettings(context);
-        return settings.getHomePath();
-      }
-    }
+@RequiresApi(29)
+static class Compat29 {
+private static String get(Context context) {
+	// TODO keep backward compatibility with getExternalStorageDirectory()
+	TermSettings settings = new TermSettings(context);
+	return settings.getHomePath();
+}
+}
 
-    static class Compat1 {
-      private static String get(@SuppressWarnings("unused") Context context) {
-        /* getExternalStorageDirectory() was deprecated in API level 29. */
-        @SuppressWarnings("deprecation")
-        File path = Environment.getExternalStorageDirectory();
-        return path.getAbsolutePath();
-      }
-    }
-  }
+static class Compat1 {
+private static String get(@SuppressWarnings("unused") Context context) {
+	/* getExternalStorageDirectory() was deprecated in API level 29. */
+	@SuppressWarnings("deprecation")
+	File path = Environment.getExternalStorageDirectory();
+	return path.getAbsolutePath();
+}
+}
+}
 
-  private class ViewHolder extends RecyclerView.ViewHolder {
-    public final TextView name;
+private class ViewHolder extends RecyclerView.ViewHolder {
+public final TextView name;
 
-    public ViewHolder(View view) {
-      super(view);
-      name = itemView.findViewById(R.id.name);
-    }
-  }
+public ViewHolder(View view) {
+	super(view);
+	name = itemView.findViewById(R.id.name);
+}
+}
 
-  private class Adapter extends RecyclerView.Adapter<ViewHolder> {
-    private final View.OnClickListener dir_listener;
-    private final View.OnClickListener file_listener;
+private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+private final View.OnClickListener dir_listener;
+private final View.OnClickListener file_listener;
 
-    private File[] entries;
+private File[] entries;
 
-    public Adapter(String path) {
-      {
-        File dir = new File(path);
-        cwd = dir.getAbsolutePath();
-        load(dir);
-      }
+public Adapter(String path) {
+	{
+		File dir = new File(path);
+		cwd = dir.getAbsolutePath();
+		load(dir);
+	}
 
-      dir_listener = view -> {
-        String tag = (String)view.getTag();
-        if (tag == null)
-          return;
+	dir_listener = view->{
+		String tag = (String)view.getTag();
+		if (tag == null)
+			return;
 
-        File dir;
-        if (tag.equals("..")) {
-          dir = new File(cwd);
-          // NOTE system does not return parent for root!
-          if (!cwd.equals("/"))
-            dir = dir.getParentFile();
-        } else
-          dir = new File(cwd, tag);
-        cwd = dir.getAbsolutePath();
-        load(dir);
-        notifyDataSetChanged();
-      };
+		File dir;
+		if (tag.equals("..")) {
+			dir = new File(cwd);
+			// NOTE system does not return parent for root!
+			if (!cwd.equals("/"))
+				dir = dir.getParentFile();
+		} else
+			dir = new File(cwd, tag);
+		cwd = dir.getAbsolutePath();
+		load(dir);
+		notifyDataSetChanged();
+	};
 
-      file_listener = view -> {
-        String tag = (String)view.getTag();
-        if (tag == null)
-          return;
+	file_listener = view->{
+		String tag = (String)view.getTag();
+		if (tag == null)
+			return;
 
-        File file = new File(cwd, tag);
-        Uri uri = Uri.fromFile(file);
-        setResult(RESULT_OK, getIntent().setData(uri));
-        finish();
-      };
-    }
+		File file = new File(cwd, tag);
+		Uri uri = Uri.fromFile(file);
+		setResult(RESULT_OK, getIntent().setData(uri));
+		finish();
+	};
+}
 
-    @Override
-    public int getItemViewType(int position) {
-      if (position == 0)
-        return ViewType.ENTRY_PARENT;
+@Override
+public int getItemViewType(int position) {
+	if (position == 0)
+		return ViewType.ENTRY_PARENT;
 
-      File file = entries[position - 1];
-      if (file.isDirectory())
-        return ViewType.ENTRY_DIRECTORY;
-      if (file.isFile())
-        return ViewType.ENTRY_FILE;
-      return ViewType.ENTRY_UNKNOWN;
-    }
+	File file = entries[position - 1];
+	if (file.isDirectory())
+		return ViewType.ENTRY_DIRECTORY;
+	if (file.isFile())
+		return ViewType.ENTRY_FILE;
+	return ViewType.ENTRY_UNKNOWN;
+}
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                         int viewType) {
-      View view = LayoutInflater.from(parent.getContext())
-                      .inflate(R.layout.content_file_selection, parent, false);
-      ViewHolder holder = new ViewHolder(view);
-      ImageView entry_type = view.findViewById(R.id.entry_type);
-      switch (viewType) {
-      case ViewType.ENTRY_PARENT: {
-        entry_type.setImageResource(R.drawable.fs_parent_24dp);
-        view.setOnClickListener(dir_listener);
-        break;
-      }
-      case ViewType.ENTRY_DIRECTORY: {
-        entry_type.setImageResource(R.drawable.fs_directory_24dp);
-        view.setOnClickListener(dir_listener);
-        break;
-      }
-      case ViewType.ENTRY_FILE: {
-        entry_type.setImageResource(R.drawable.fs_file_24dp);
-        view.setOnClickListener(file_listener);
-        break;
-      }
-      case ViewType.ENTRY_UNKNOWN: {
-        entry_type.setImageResource(R.drawable.fs_unknown_24dp);
-        break;
-      }
-      }
-      return holder;
-    }
+@NonNull
+@Override
+public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                     int viewType) {
+	View view = LayoutInflater.from(parent.getContext())
+	            .inflate(R.layout.content_file_selection, parent, false);
+	ViewHolder holder = new ViewHolder(view);
+	ImageView entry_type = view.findViewById(R.id.entry_type);
+	switch (viewType) {
+	case ViewType.ENTRY_PARENT: {
+		entry_type.setImageResource(R.drawable.fs_parent_24dp);
+		view.setOnClickListener(dir_listener);
+		break;
+	}
+	case ViewType.ENTRY_DIRECTORY: {
+		entry_type.setImageResource(R.drawable.fs_directory_24dp);
+		view.setOnClickListener(dir_listener);
+		break;
+	}
+	case ViewType.ENTRY_FILE: {
+		entry_type.setImageResource(R.drawable.fs_file_24dp);
+		view.setOnClickListener(file_listener);
+		break;
+	}
+	case ViewType.ENTRY_UNKNOWN: {
+		entry_type.setImageResource(R.drawable.fs_unknown_24dp);
+		break;
+	}
+	}
+	return holder;
+}
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-      @ViewType int type = holder.getItemViewType();
+@Override
+public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+	@ViewType int type = holder.getItemViewType();
 
-      if (type == ViewType.ENTRY_PARENT) {
-        holder.name.setText(cwd);
-        holder.itemView.setTag("..");
-        return;
-      }
+	if (type == ViewType.ENTRY_PARENT) {
+		holder.name.setText(cwd);
+		holder.itemView.setTag("..");
+		return;
+	}
 
-      File file = entries[position - 1];
-      String name = file.getName();
-      holder.name.setText(name);
-      if (type != ViewType.ENTRY_UNKNOWN)
-        holder.itemView.setTag(name);
-    }
+	File file = entries[position - 1];
+	String name = file.getName();
+	holder.name.setText(name);
+	if (type != ViewType.ENTRY_UNKNOWN)
+		holder.itemView.setTag(name);
+}
 
-    @Override
-    public int getItemCount() {
-      return 1 + (entries == null ? 0 : entries.length);
-    }
+@Override
+public int getItemCount() {
+	return 1 + (entries == null ? 0 : entries.length);
+}
 
-    private void load(File dir) {
-      entries = dir.listFiles();
-      if (entries == null)
-        return;
-      Arrays.sort(entries, (f1, f2) -> {
-        if (f1.isDirectory()) {
-          if (f2.isDirectory())
-            return f1.getName().compareTo(f2.getName());
-          return -1;
-        }
-        if (f1.isFile()) {
-          if (f2.isDirectory())
-            return 1;
-          if (f2.isFile())
-            return f1.getName().compareTo(f2.getName());
-          return -1;
-        }
-        // non-existent symbolic link
-        if (f2.isDirectory())
-          return 1;
-        if (f2.isFile())
-          return 1;
-        return f1.getName().compareTo(f2.getName());
-      });
-    }
-  }
+private void load(File dir) {
+	entries = dir.listFiles();
+	if (entries == null)
+		return;
+	Arrays.sort(entries, (f1, f2)->{
+				if (f1.isDirectory()) {
+				        if (f2.isDirectory())
+						return f1.getName().compareTo(f2.getName());
+				        return -1;
+				}
+				if (f1.isFile()) {
+				        if (f2.isDirectory())
+						return 1;
+				        if (f2.isFile())
+						return f1.getName().compareTo(f2.getName());
+				        return -1;
+				}
+				// non-existent symbolic link
+				if (f2.isDirectory())
+					return 1;
+				if (f2.isFile())
+					return 1;
+				return f1.getName().compareTo(f2.getName());
+			});
+}
+}
 }

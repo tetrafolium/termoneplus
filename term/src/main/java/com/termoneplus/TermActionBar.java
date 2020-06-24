@@ -40,176 +40,185 @@ import com.google.android.material.navigation.NavigationView;
  */
 
 public class TermActionBar {
-  private final DrawerLayout drawer;
-  private final NavigationView nav_view;
-  private final Toolbar toolbar;
-  private final Spinner spinner;
+private final DrawerLayout drawer;
+private final NavigationView nav_view;
+private final Toolbar toolbar;
+private final Spinner spinner;
 
-  private TermActionBar(AppCompatActivity context, boolean floating) {
-    toolbar = context.findViewById(R.id.toolbar);
-    context.setSupportActionBar(toolbar);
+private TermActionBar(AppCompatActivity context, boolean floating) {
+	toolbar = context.findViewById(R.id.toolbar);
+	context.setSupportActionBar(toolbar);
 
-    drawer = context.findViewById(R.id.drawer_layout);
-    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        context, drawer, toolbar, R.string.navigation_drawer_open,
-        R.string.navigation_drawer_close) {
-      @Override
-      public void onDrawerOpened(View drawerView) {
-        hideSoftInput(drawerView);
-        super.onDrawerOpened(drawerView);
-      }
-    };
-    drawer.addDrawerListener(toggle);
-    toggle.syncState();
+	drawer = context.findViewById(R.id.drawer_layout);
+	ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+		context, drawer, toolbar, R.string.navigation_drawer_open,
+		R.string.navigation_drawer_close) {
+		@Override
+		public void onDrawerOpened(View drawerView) {
+			hideSoftInput(drawerView);
+			super.onDrawerOpened(drawerView);
+		}
+	};
+	drawer.addDrawerListener(toggle);
+	toggle.syncState();
 
-    nav_view = context.findViewById(R.id.nav_view);
-    NavigationBackground.presetColors(context, nav_view);
+	nav_view = context.findViewById(R.id.nav_view);
+	NavigationBackground.presetColors(context, nav_view);
 
-    ActionBar appbar = context.getSupportActionBar();
-    if (appbar != null) {
-      appbar.setDisplayShowTitleEnabled(false);
-      appbar.setDisplayShowHomeEnabled(false);
-    }
+	ActionBar appbar = context.getSupportActionBar();
+	if (appbar != null) {
+		appbar.setDisplayShowTitleEnabled(false);
+		appbar.setDisplayShowHomeEnabled(false);
+	}
 
-    spinner = context.findViewById(R.id.spinner);
+	spinner = context.findViewById(R.id.spinner);
 
-    if (floating)
-      hide();
-  }
+	if (floating)
+		hide();
+}
 
-  public static TermActionBar setTermContentView(AppCompatActivity context,
-                                                 boolean floating) {
-    if (floating)
-      context.setContentView(R.layout.drawer_term_floatbar);
-    else
-      context.setContentView(R.layout.drawer_term);
+public static TermActionBar setTermContentView(AppCompatActivity context,
+                                               boolean floating) {
+	if (floating)
+		context.setContentView(R.layout.drawer_term_floatbar);
+	else
+		context.setContentView(R.layout.drawer_term);
 
-    return new TermActionBar(context, floating);
-  }
+	return new TermActionBar(context, floating);
+}
 
-  public void setAdapter(WindowListAdapter adapter) {
-    spinner.setAdapter(adapter);
-  }
+public void setAdapter(WindowListAdapter adapter) {
+	spinner.setAdapter(adapter);
+}
 
-  public void setOnItemSelectedListener(OnItemSelectedListener listener) {
-    AdapterView.OnItemSelectedListener wrapper =
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view,
-                                     int position, long id) {
-            listener.onItemSelected(position);
-          }
+public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+	AdapterView.OnItemSelectedListener wrapper =
+		new AdapterView.OnItemSelectedListener() {
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view,
+		                           int position, long id) {
+			listener.onItemSelected(position);
+		}
 
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        };
-    spinner.setOnItemSelectedListener(wrapper);
-  }
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) {
+		}
+	};
+	spinner.setOnItemSelectedListener(wrapper);
+}
 
-  public void setOnNavigationItemSelectedListener(
-      NavigationView.OnNavigationItemSelectedListener listener) {
-    nav_view.setNavigationItemSelectedListener(item -> {
-      boolean result = listener.onNavigationItemSelected(item);
-      drawer.closeDrawer(GravityCompat.START);
-      return result;
-    });
-  }
+public void setOnNavigationItemSelectedListener(
+	NavigationView.OnNavigationItemSelectedListener listener) {
+	nav_view.setNavigationItemSelectedListener(item->{
+			boolean result = listener.onNavigationItemSelected(item);
+			drawer.closeDrawer(GravityCompat.START);
+			return result;
+		});
+}
 
-  public void setSelection(int position) { spinner.setSelection(position); }
+public void setSelection(int position) {
+	spinner.setSelection(position);
+}
 
-  public boolean isShowing() { return toolbar.getVisibility() == View.VISIBLE; }
+public boolean isShowing() {
+	return toolbar.getVisibility() == View.VISIBLE;
+}
 
-  public void hide() { toolbar.setVisibility(View.GONE); }
+public void hide() {
+	toolbar.setVisibility(View.GONE);
+}
 
-  public void show() { toolbar.setVisibility(View.VISIBLE); }
+public void show() {
+	toolbar.setVisibility(View.VISIBLE);
+}
 
-  public void doToggleActionBar() {
-    if (isShowing()) {
-      hide();
-    } else {
-      show();
-    }
-  }
+public void doToggleActionBar() {
+	if (isShowing()) {
+		hide();
+	} else {
+		show();
+	}
+}
 
-  public void lockDrawer(boolean flag) {
-    if (flag)
-      drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    else
-      drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-  }
+public void lockDrawer(boolean flag) {
+	if (flag)
+		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+	else
+		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+}
 
-  private void hideSoftInput(final View view) {
-    new Thread() {
-      @Override
-      public void run() {
-        Context context = view.getContext();
+private void hideSoftInput(final View view) {
+	new Thread() {
+		@Override
+		public void run() {
+			Context context = view.getContext();
 
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(
-            Context.INPUT_METHOD_SERVICE);
-        if (imm == null)
-          return;
+			InputMethodManager imm = (InputMethodManager)context.getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+			if (imm == null)
+				return;
 
-        android.os.IBinder token = view.getWindowToken();
-        imm.hideSoftInputFromWindow(token, 0);
-      }
-    }.start();
-  }
+			android.os.IBinder token = view.getWindowToken();
+			imm.hideSoftInputFromWindow(token, 0);
+		}
+	}.start();
+}
 
-  public interface OnItemSelectedListener { void onItemSelected(int position); }
+public interface OnItemSelectedListener { void onItemSelected(int position); }
 
-  private static class NavigationBackground {
-    private static void presetColors(AppCompatActivity context,
-                                     NavigationView view) {
-      if (Build.VERSION.SDK_INT >=
-          Build.VERSION_CODES.LOLLIPOP /* API Level 21*/) {
-        // managed as attribute in drawable header_background
-        return;
-      }
+private static class NavigationBackground {
+private static void presetColors(AppCompatActivity context,
+                                 NavigationView view) {
+	if (Build.VERSION.SDK_INT >=
+	    Build.VERSION_CODES.LOLLIPOP /* API Level 21*/) {
+		// managed as attribute in drawable header_background
+		return;
+	}
 
-      @ColorInt
-      final int[] colors = {
-          // see header_background
-          0x78909C /* Blue Gray 50, 400 */, 0x607D8B /* Blue Gray 50, 500 */,
-          0x455A64 /* Blue Gray 50, 700 */
-      };
-      TypedValue typedValue = new TypedValue();
-      Resources.Theme theme = context.getTheme();
-      if (theme.resolveAttribute(R.attr.colorPrimaryLight, typedValue, true))
-        colors[0] = typedValue.data;
-      if (theme.resolveAttribute(R.attr.colorPrimary, typedValue, true))
-        colors[1] = typedValue.data;
-      if (theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true))
-        colors[2] = typedValue.data;
+	@ColorInt
+	final int[] colors = {
+		// see header_background
+		0x78909C /* Blue Gray 50, 400 */, 0x607D8B /* Blue Gray 50, 500 */,
+		0x455A64 /* Blue Gray 50, 700 */
+	};
+	TypedValue typedValue = new TypedValue();
+	Resources.Theme theme = context.getTheme();
+	if (theme.resolveAttribute(R.attr.colorPrimaryLight, typedValue, true))
+		colors[0] = typedValue.data;
+	if (theme.resolveAttribute(R.attr.colorPrimary, typedValue, true))
+		colors[1] = typedValue.data;
+	if (theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true))
+		colors[2] = typedValue.data;
 
-      if (Build.VERSION.SDK_INT >=
-          Build.VERSION_CODES.JELLY_BEAN /* API Level 16*/)
-        Compat16.setColors(view, colors);
-      else
-        Compat1.setColors(view, colors);
-    }
+	if (Build.VERSION.SDK_INT >=
+	    Build.VERSION_CODES.JELLY_BEAN /* API Level 16*/)
+		Compat16.setColors(view, colors);
+	else
+		Compat1.setColors(view, colors);
+}
 
-    @RequiresApi(16)
-    private static class Compat16 {
-      private static void setColors(NavigationView view, int[] colors) {
-        try {
-          View header = view.getHeaderView(0);
-          GradientDrawable drawable = (GradientDrawable)header.getBackground();
-          drawable.setColors(colors);
-        } catch (Exception ignore) {
-        }
-      }
-    }
+@RequiresApi(16)
+private static class Compat16 {
+private static void setColors(NavigationView view, int[] colors) {
+	try {
+		View header = view.getHeaderView(0);
+		GradientDrawable drawable = (GradientDrawable)header.getBackground();
+		drawable.setColors(colors);
+	} catch (Exception ignore) {
+	}
+}
+}
 
-    private static class Compat1 {
-      private static void setColors(NavigationView view, int[] colors) {
-        try {
-          View header = view.getHeaderView(0);
-          GradientDrawable drawable =
-              new GradientDrawable(GradientDrawable.Orientation.TL_BR, colors);
-          header.setBackgroundDrawable(drawable);
-        } catch (Exception ignore) {
-        }
-      }
-    }
-  }
+private static class Compat1 {
+private static void setColors(NavigationView view, int[] colors) {
+	try {
+		View header = view.getHeaderView(0);
+		GradientDrawable drawable =
+			new GradientDrawable(GradientDrawable.Orientation.TL_BR, colors);
+		header.setBackgroundDrawable(drawable);
+	} catch (Exception ignore) {
+	}
+}
+}
+}
 }

@@ -27,102 +27,104 @@ import java.io.OutputStream;
 import java.util.Random;
 
 public class UnixSocketServer {
-  private static final int SO_TIMEOUT = (3 /*sec.*/ * 1000);
+private static final int SO_TIMEOUT = (3 /*sec.*/ * 1000);
 
-  private final ServerThread server;
+private final ServerThread server;
 
-  public UnixSocketServer(String address, ConnectionHandler handler)
-      throws IOException {
-    final LocalServerSocket socket = new LocalServerSocket(address);
-    server = new ServerThread(socket, handler);
-    server.setName(BuildConfig.APPLICATION_ID + "-UnixSockets-" +
-                   android.os.Process.myPid());
-  }
+public UnixSocketServer(String address, ConnectionHandler handler)
+throws IOException {
+	final LocalServerSocket socket = new LocalServerSocket(address);
+	server = new ServerThread(socket, handler);
+	server.setName(BuildConfig.APPLICATION_ID + "-UnixSockets-" +
+	               android.os.Process.myPid());
+}
 
-  public void start() { server.start(); }
+public void start() {
+	server.start();
+}
 
-  public void stop() {
-    LocalSocketAddress address = server.socket.getLocalSocketAddress();
-    LocalSocket client = new LocalSocket();
-    server.interrupted = true;
-    try {
-      client.connect(address);
-    } catch (IOException ignore) {
-    }
-    try {
-      client.close();
-    } catch (IOException ignore) {
-    }
-  }
+public void stop() {
+	LocalSocketAddress address = server.socket.getLocalSocketAddress();
+	LocalSocket client = new LocalSocket();
+	server.interrupted = true;
+	try {
+		client.connect(address);
+	} catch (IOException ignore) {
+	}
+	try {
+		client.close();
+	} catch (IOException ignore) {
+	}
+}
 
-  public interface ConnectionHandler {
-    void handle(InputStream inputStream, OutputStream outputStream)
-        throws IOException;
-  }
+public interface ConnectionHandler {
+void handle(InputStream inputStream, OutputStream outputStream)
+throws IOException;
+}
 
-  private static class ServerThread extends Thread {
-    private final LocalServerSocket socket;
-    private final ConnectionHandler handler;
-    boolean interrupted = false;
+private static class ServerThread extends Thread {
+private final LocalServerSocket socket;
+private final ConnectionHandler handler;
+boolean interrupted = false;
 
-    private ServerThread(LocalServerSocket socket, ConnectionHandler handler) {
-      this.socket = socket;
-      this.handler = handler;
-    }
+private ServerThread(LocalServerSocket socket, ConnectionHandler handler) {
+	this.socket = socket;
+	this.handler = handler;
+}
 
-    @Override
-    public void run() {
-      while (true) {
-        try {
-          final LocalSocket connection = socket.accept();
-          if (interrupted) {
-            connection.close();
-            break;
-          }
-          connection.setSoTimeout(SO_TIMEOUT);
+@Override
+public void run() {
+	while (true) {
+		try {
+			final LocalSocket connection = socket.accept();
+			if (interrupted) {
+				connection.close();
+				break;
+			}
+			connection.setSoTimeout(SO_TIMEOUT);
 
-          Credentials credentials = connection.getPeerCredentials();
-          int uid = credentials.getUid();
-          // accept requests only from same user id
-          if (uid != android.os.Process.myUid())
-            return;
+			Credentials credentials = connection.getPeerCredentials();
+			int uid = credentials.getUid();
+			// accept requests only from same user id
+			if (uid != android.os.Process.myUid())
+				return;
 
-          Random random = new Random();
-          WorkerThread worker = new WorkerThread(connection, handler);
-          worker.setName(BuildConfig.APPLICATION_ID + ":unix_socket_" +
-                         android.os.Process.myPid() + "." + random.nextInt());
-          worker.setDaemon(true);
-          worker.start();
-        } catch (IOException ignore) {
-          break;
-        }
-      }
-      try {
-        socket.close();
-      } catch (IOException ignore) {
-      }
-    }
-  }
+			Random random = new Random();
+			WorkerThread worker = new WorkerThread(connection, handler);
+			worker.setName(BuildConfig.APPLICATION_ID + ":unix_socket_" +
+			               android.os.Process.myPid() + "." + random.nextInt());
+			worker.setDaemon(true);
+			worker.start();
+		} catch (IOException ignore) {
+			break;
+		}
+	}
+	try {
+		socket.close();
+	} catch (IOException ignore) {
+	}
+}
+}
 
-  private static class WorkerThread extends Thread {
-    private final LocalSocket socket;
-    private final ConnectionHandler handler;
+private static class WorkerThread extends Thread {
+private final LocalSocket socket;
+private final ConnectionHandler handler;
 
-    WorkerThread(LocalSocket socket, ConnectionHandler handler) {
-      this.socket = socket;
-      this.handler = handler;
-    }
+WorkerThread(LocalSocket socket, ConnectionHandler handler) {
+	this.socket = socket;
+	this.handler = handler;
+}
 
-    @Override
-    public void run() {
-      try {
-        handler.handle(socket.getInputStream(), socket.getOutputStream());
-      } catch (IOException ignore) {
-      }
-      try {
-        socket.close();
-      } catch (IOException ignore) {
-      }
-    }
-  }
+@Override
+public void run() {
+	try {
+		handler.handle(socket.getInputStream(), socket.getOutputStream());
+	} catch (IOException ignore) {
+	}
+	try {
+		socket.close();
+	} catch (IOException ignore) {
+	}
+}
+}
 }

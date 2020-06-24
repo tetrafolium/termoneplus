@@ -27,54 +27,54 @@ import java.util.List;
 
 public class WrapOpenURL {
 
-  public static void launch(Context context, Uri uri) {
+public static void launch(Context context, Uri uri) {
 
-    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+	Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
-    PackageManager pm = context.getPackageManager();
-    List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+	PackageManager pm = context.getPackageManager();
+	List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
 
-    if (activities.size() > 0) {
-      try {
-        context.startActivity(intent);
-      } catch (android.content.ActivityNotFoundException e) {
-        alert(context, android.R.drawable.ic_dialog_alert,
-              "Failed to launch view action!");
-      }
-    } else {
-      alert(context, android.R.drawable.ic_dialog_info,
-            "Missing view actions!");
-    }
-  }
+	if (activities.size() > 0) {
+		try {
+			context.startActivity(intent);
+		} catch (android.content.ActivityNotFoundException e) {
+			alert(context, android.R.drawable.ic_dialog_alert,
+			      "Failed to launch view action!");
+		}
+	} else {
+		alert(context, android.R.drawable.ic_dialog_info,
+		      "Missing view actions!");
+	}
+}
 
-  public static void launch(Context context, String path) {
-    Uri uri = Uri.parse(path);
-    launch(context, uri);
-  }
+public static void launch(Context context, String path) {
+	Uri uri = Uri.parse(path);
+	launch(context, uri);
+}
 
-  public static void launch(Context context, int resId) {
-    String path = context.getString(resId);
-    launch(context, path);
-  }
+public static void launch(Context context, int resId) {
+	String path = context.getString(resId);
+	launch(context, path);
+}
 
-  private static void alert(Context context, int iconId, CharSequence message) {
-    Class clazz = FragmentActivity.class;
-    if (clazz.isInstance(context)) {
-      new androidx.appcompat.app.AlertDialog.Builder(context)
-          .setTitle(android.R.string.dialog_alert_title)
-          .setIcon(iconId)
-          .setMessage(message)
-          .setNeutralButton(android.R.string.ok, null)
-          .create()
-          .show();
-    } else {
-      new AlertDialog.Builder(context)
-          .setTitle(android.R.string.dialog_alert_title)
-          .setIcon(iconId)
-          .setMessage(message)
-          .setNeutralButton(android.R.string.ok, null)
-          .create()
-          .show();
-    }
-  }
+private static void alert(Context context, int iconId, CharSequence message) {
+	Class clazz = FragmentActivity.class;
+	if (clazz.isInstance(context)) {
+		new androidx.appcompat.app.AlertDialog.Builder(context)
+		.setTitle(android.R.string.dialog_alert_title)
+		.setIcon(iconId)
+		.setMessage(message)
+		.setNeutralButton(android.R.string.ok, null)
+		.create()
+		.show();
+	} else {
+		new AlertDialog.Builder(context)
+		.setTitle(android.R.string.dialog_alert_title)
+		.setIcon(iconId)
+		.setMessage(message)
+		.setNeutralButton(android.R.string.ok, null)
+		.create()
+		.show();
+	}
+}
 }

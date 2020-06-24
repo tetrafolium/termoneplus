@@ -27,75 +27,75 @@ import java.util.ArrayList;
 
 public class Installer {
 
-  public static final String APPINFO_COMMAND = "libexec-t1plus.so";
+public static final String APPINFO_COMMAND = "libexec-t1plus.so";
 
-  public static boolean install_directory(File dir, boolean share) {
-    if (!(dir.exists() || dir.mkdir()))
-      return false;
+public static boolean install_directory(File dir, boolean share) {
+	if (!(dir.exists() || dir.mkdir()))
+		return false;
 
-    // always preset directory permissions
-    return dir.setReadable(true, !share) && dir.setExecutable(true, false);
-  }
+	// always preset directory permissions
+	return dir.setReadable(true, !share) && dir.setExecutable(true, false);
+}
 
-  public static boolean install_text_file(String[] script, File file) {
-    try {
-      PrintWriter out = new PrintWriter(file);
-      for (String line : script)
-        out.println(line);
-      out.flush();
-      out.close();
-      // always preset permissions
-      return file.setReadable(true, true);
-    } catch (IOException ignore) {
-    }
-    return false;
-  }
+public static boolean install_text_file(String[] script, File file) {
+	try {
+		PrintWriter out = new PrintWriter(file);
+		for (String line : script)
+			out.println(line);
+		out.flush();
+		out.close();
+		// always preset permissions
+		return file.setReadable(true, true);
+	} catch (IOException ignore) {
+	}
+	return false;
+}
 
-  public static boolean installAppScriptFile() {
-    ArrayList<String> shell_script = new ArrayList<>();
+public static boolean installAppScriptFile() {
+	ArrayList<String> shell_script = new ArrayList<>();
 
-    String sysmkshrc = "/system/etc/mkshrc";
-    if (!Application.getScriptFilePath().equals(sysmkshrc) &&
-        new File(sysmkshrc).exists())
-      shell_script.add(". " + sysmkshrc);
+	String sysmkshrc = "/system/etc/mkshrc";
+	if (!Application.getScriptFilePath().equals(sysmkshrc) &&
+	    new File(sysmkshrc).exists())
+		shell_script.add(". " + sysmkshrc);
 
-    // Next work fine with mksh but fail with ash.
-    // shell_script.add(". /proc/self/fd/0 <<< \"$(libexec-t1plus.so
-    // aliases)\"");
-    shell_script.add(". /proc/self/fd/0 <<EOF");
-    shell_script.add("$(" + APPINFO_COMMAND + " aliases)");
-    shell_script.add("EOF");
+	// Next work fine with mksh but fail with ash.
+	// shell_script.add(". /proc/self/fd/0 <<< \"$(libexec-t1plus.so
+	// aliases)\"");
+	shell_script.add(". /proc/self/fd/0 <<EOF");
+	shell_script.add("$(" + APPINFO_COMMAND + " aliases)");
+	shell_script.add("EOF");
 
-    return install_text_file(shell_script.toArray(new String[0]),
-                             Application.getScriptFile());
-  }
+	return install_text_file(shell_script.toArray(new String[0]),
+	                         Application.getScriptFile());
+}
 
-  public static boolean copy_executable(File source, File target_path) {
-    int buflen = 32 * 1024; // 32k
-    byte[] buf = new byte[buflen];
+public static boolean copy_executable(File source, File target_path) {
+	int buflen = 32 * 1024; // 32k
+	byte[] buf = new byte[buflen];
 
-    File target = new File(target_path, source.getName());
-    File backup = new File(target.getAbsolutePath() + "-bak");
-    if ((target.exists()) && (!target.renameTo(backup)))
-      return false;
+	File target = new File(target_path, source.getName());
+	File backup = new File(target.getAbsolutePath() + "-bak");
+	if ((target.exists()) && (!target.renameTo(backup)))
+		return false;
 
-    try {
-      OutputStream os = new FileOutputStream(target);
-      InputStream is = new FileInputStream(source);
-      int len;
-      while ((len = is.read(buf, 0, buflen)) > 0) {
-        os.write(buf, 0, len);
-      }
-      os.close();
-      is.close();
+	try {
+		OutputStream os = new FileOutputStream(target);
+		InputStream is = new FileInputStream(source);
+		int len;
+		while ((len = is.read(buf, 0, buflen)) > 0) {
+			os.write(buf, 0, len);
+		}
+		os.close();
+		is.close();
 
-      if (backup.exists())
-        backup.delete();
+		if (backup.exists())
+			backup.delete();
 
-      // always preset executable permissions
-      return target.setReadable(true) && target.setExecutable(true, false);
-    } catch (Exception ignore) {
-    }
-    return false;
-  }
+		// always preset executable permissions
+		return target.setReadable(true) && target.setExecutable(true, false);
+	} catch (Exception ignore) {
+	}
+	return false;
+}
 }

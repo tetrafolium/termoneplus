@@ -26,70 +26,70 @@ import androidx.preference.PreferenceManager;
 import com.termoneplus.utils.ThemeManager;
 
 public class TermPreferencesActivity extends AppCompatActivity
-    implements SharedPreferences.OnSharedPreferenceChangeListener {
+	implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
 
-    {
-      ActionBar action_bar = getSupportActionBar();
-      if (action_bar != null) {
-        action_bar.setDisplayHomeAsUpEnabled(true);
-      }
-    }
+	{
+		ActionBar action_bar = getSupportActionBar();
+		if (action_bar != null) {
+			action_bar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
 
-    {
-      SharedPreferences prefs =
-          PreferenceManager.getDefaultSharedPreferences(this);
-      prefs.registerOnSharedPreferenceChangeListener(this);
-    }
+	{
+		SharedPreferences prefs =
+			PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
+	}
 
-    loadPreferences();
-  }
+	loadPreferences();
+}
 
-  @Override
-  protected void onDestroy() {
-    {
-      SharedPreferences prefs =
-          PreferenceManager.getDefaultSharedPreferences(this);
-      prefs.unregisterOnSharedPreferenceChangeListener(this);
-    }
-    super.onDestroy();
-  }
+@Override
+protected void onDestroy() {
+	{
+		SharedPreferences prefs =
+			PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.unregisterOnSharedPreferenceChangeListener(this);
+	}
+	super.onDestroy();
+}
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-    case android.R.id.home: // Action bar home button selected
-      NavUtils.navigateUpFromSameTask(this);
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
-    }
-  }
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home: // Action bar home button selected
+		NavUtils.navigateUpFromSameTask(this);
+		return true;
+	default:
+		return super.onOptionsItemSelected(item);
+	}
+}
 
-  private void loadPreferences() {
-    // Display the fragment as the main content.
-    getSupportFragmentManager()
-        .beginTransaction()
-        .replace(android.R.id.content, new TermPreferencesFragment())
-        .commit();
-  }
+private void loadPreferences() {
+	// Display the fragment as the main content.
+	getSupportFragmentManager()
+	.beginTransaction()
+	.replace(android.R.id.content, new TermPreferencesFragment())
+	.commit();
+}
 
-  @Override
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                        String key) {
-    if (ThemeManager.PREF_THEME_MODE.equals(key)) {
-      // Do no not inform user!
-      restart(0);
-    }
-  }
+@Override
+public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                      String key) {
+	if (ThemeManager.PREF_THEME_MODE.equals(key)) {
+		// Do no not inform user!
+		restart(0);
+	}
+}
 
-  public static class TermPreferencesFragment extends PreferenceFragmentCompat {
-    @Override
-    public void onCreatePreferences(Bundle bundle, String rootKey) {
-      // Load the preferences from an XML resource
-      setPreferencesFromResource(R.xml.preferences, rootKey);
-    }
-  }
+public static class TermPreferencesFragment extends PreferenceFragmentCompat {
+@Override
+public void onCreatePreferences(Bundle bundle, String rootKey) {
+	// Load the preferences from an XML resource
+	setPreferencesFromResource(R.xml.preferences, rootKey);
+}
+}
 }

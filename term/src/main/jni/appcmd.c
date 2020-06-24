@@ -24,61 +24,61 @@
 
 static int /*bool*/
 get_info(const char *info) {
-  int ret = 0;
-  char sockname[PATH_MAX + 1];
-  char msg[1024];
-  char buf[4096];
-  int sock;
-  size_t len, res;
+	int ret = 0;
+	char sockname[PATH_MAX + 1];
+	char msg[1024];
+	char buf[4096];
+	int sock;
+	size_t len, res;
 
-  if (snprintf(sockname, sizeof(sockname), SOCKET_PREFIX "%ld",
-               (long)getuid()) >= sizeof(sockname))
-    return 0;
+	if (snprintf(sockname, sizeof(sockname), SOCKET_PREFIX "%ld",
+	             (long)getuid()) >= sizeof(sockname))
+		return 0;
 
-  if (snprintf(msg, sizeof(msg), "get %s\n", info) >= sizeof(msg))
-    return 0;
+	if (snprintf(msg, sizeof(msg), "get %s\n", info) >= sizeof(msg))
+		return 0;
 
-  sock = open_socket(sockname);
-  if (sock == -1)
-    return 0;
+	sock = open_socket(sockname);
+	if (sock == -1)
+		return 0;
 
-  len = strlen(msg);
-  res = atomicio(vwrite, sock, (void *)msg, len);
-  if (res != len)
-    goto done;
+	len = strlen(msg);
+	res = atomicio(vwrite, sock, (void *)msg, len);
+	if (res != len)
+		goto done;
 
-  while (1) {
-    int read_errno;
-    errno = 0;
-    len = atomicio(read, sock, buf, sizeof(buf));
-    read_errno = errno;
-    if (len > 0) {
-      errno = 0;
-      res = atomicio(vwrite, STDOUT_FILENO, buf, len);
-      if (res != len)
-        goto done;
-    }
-    if (read_errno == EPIPE)
-      break;
-  }
-  (void)fsync(STDOUT_FILENO);
+	while (1) {
+		int read_errno;
+		errno = 0;
+		len = atomicio(read, sock, buf, sizeof(buf));
+		read_errno = errno;
+		if (len > 0) {
+			errno = 0;
+			res = atomicio(vwrite, STDOUT_FILENO, buf, len);
+			if (res != len)
+				goto done;
+		}
+		if (read_errno == EPIPE)
+			break;
+	}
+	(void)fsync(STDOUT_FILENO);
 
-  ret = 1;
+	ret = 1;
 
 done:
-  close(sock);
-  return ret;
+	close(sock);
+	return ret;
 }
 
 #include <sysexits.h>
 
 int main(int argc, char *argv[]) {
-  int ret;
+	int ret;
 
-  if (argc != 2)
-    exit(EX_USAGE);
+	if (argc != 2)
+		exit(EX_USAGE);
 
-  ret = get_info(argv[1]);
+	ret = get_info(argv[1]);
 
-  return ret ? 0 : EX_SOFTWARE;
+	return ret ? 0 : EX_SOFTWARE;
 }
