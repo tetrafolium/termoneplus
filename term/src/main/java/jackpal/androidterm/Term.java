@@ -480,8 +480,8 @@ public class Term extends AppCompatActivity
     }
 
     private boolean checkHaveFullHwKeyboard(Configuration c) {
-        return (c.keyboard == Configuration.KEYBOARD_QWERTY) &&
-                (c.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO);
+        return (c.keyboard == Configuration.KEYBOARD_QWERTY)
+                && (c.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO);
     }
 
     @Override
@@ -653,8 +653,8 @@ public class Term extends AppCompatActivity
         }
 
         String action = intent.getAction();
-        if (TextUtils.isEmpty(action) ||
-                /* not from application */
+        if (TextUtils.isEmpty(action)
+                || /* not from application */
                 !intent.getComponent().getPackageName().equals(Application.ID)) {
             return;
         }
@@ -914,8 +914,8 @@ public class Term extends AppCompatActivity
                         r, R.array.control_keys_short_names,
                         R.string.control_key_dialog_control_text,
                         R.string.control_key_dialog_control_disabled_text, "CTRLKEY")
-                        + "\n\n" +
-                        formatMessage(mSettings.getFnKeyId(), TermSettings.FN_KEY_ID_NONE,
+                        + "\n\n"
+                        + formatMessage(mSettings.getFnKeyId(), TermSettings.FN_KEY_ID_NONE,
                                 r, R.array.fn_keys_short_names,
                                 R.string.control_key_dialog_fn_text,
                                 R.string.control_key_dialog_fn_disabled_text, "FNKEY"));

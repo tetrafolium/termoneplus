@@ -80,8 +80,8 @@ public class AddShortcut extends AppCompatActivity {
         cmd_param.setOnFocusChangeListener((view, focus) -> {
             if (!focus) {
                 String s;
-                if (cmd_name.getText().toString().equals("") &&
-                        !(s = cmd_param.getText().toString()).equals("")
+                if (cmd_name.getText().toString().equals("")
+                        && !(s = cmd_param.getText().toString()).equals("")
                         )
                     cmd_name.setText(s.split("\\s")[0]);
             }

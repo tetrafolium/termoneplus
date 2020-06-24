@@ -13,11 +13,11 @@ public class InputConnectionTest extends AndroidTestCase {
     }
 
     public void testBackSpace() {
-//		MockContext cn = new MockContext();
-//		MockApplication a = new MockApplication();
-//		TermSession ts = new TermSession();
-//		DisplayMetrics m = new DisplayMetrics();
-//		EmulatorView e = new EmulatorView(cn, ts, m);
-//		InputConnection c = e.onCreateInputConnection(null);
+//              MockContext cn = new MockContext();
+//              MockApplication a = new MockApplication();
+//              TermSession ts = new TermSession();
+//              DisplayMetrics m = new DisplayMetrics();
+//              EmulatorView e = new EmulatorView(cn, ts, m);
+//              InputConnection c = e.onCreateInputConnection(null);
     }
 }

@@ -232,8 +232,8 @@ class TranscriptScreen implements Screen {
             }
             int style = color.get(column);
             boolean selectionStyle = false;
-            if ((column >= selx1 || (displayCharWidth == 2 && column == selx1 - 1)) &&
-                    column <= selx2) {
+            if ((column >= selx1 || (displayCharWidth == 2 && column == selx1 - 1))
+                    && column <= selx2) {
                 // Draw selection:
                 selectionStyle = true;
             }
@@ -342,10 +342,10 @@ class TranscriptScreen implements Screen {
         for (int row = selY1; row <= selY2; row++) {
             int x1 = 0;
             int x2;
-            if ( row == selY1 ) {
+            if (row == selY1) {
                 x1 = selX1;
             }
-            if ( row == selY2 ) {
+            if (row == selY2) {
                 x2 = selX2 + 1;
                 if (x2 > columns) {
                     x2 = columns;
@@ -462,12 +462,10 @@ class TranscriptScreen implements Screen {
         try
         {
             return mData.getLine(row);
-        }
-        catch (IllegalArgumentException e)
+        } catch (IllegalArgumentException e)
         {
             return null;
-        }
-        catch (NullPointerException e)
+        } catch (NullPointerException e)
         {
             return null;
         }

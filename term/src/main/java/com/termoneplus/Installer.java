@@ -34,8 +34,8 @@ public class Installer {
         if (!(dir.exists() || dir.mkdir())) return false;
 
         // always preset directory permissions
-        return dir.setReadable(true, !share) &&
-                dir.setExecutable(true, false);
+        return dir.setReadable(true, !share)
+                && dir.setExecutable(true, false);
     }
 
     public static boolean install_text_file(String[] script, File file) {
@@ -56,8 +56,8 @@ public class Installer {
         ArrayList<String> shell_script = new ArrayList<>();
 
         String sysmkshrc = "/system/etc/mkshrc";
-        if (!Application.getScriptFilePath().equals(sysmkshrc) &&
-                new File(sysmkshrc).exists())
+        if (!Application.getScriptFilePath().equals(sysmkshrc)
+                && new File(sysmkshrc).exists())
             shell_script.add(". " + sysmkshrc);
 
         //Next work fine with mksh but fail with ash.
@@ -93,8 +93,8 @@ public class Installer {
                 backup.delete();
 
             // always preset executable permissions
-            return target.setReadable(true) &&
-                    target.setExecutable(true, false);
+            return target.setReadable(true)
+                    && target.setExecutable(true, false);
         } catch (Exception ignore) {
         }
         return false;

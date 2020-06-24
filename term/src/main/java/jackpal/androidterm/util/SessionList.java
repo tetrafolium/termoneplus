@@ -89,7 +89,7 @@ public class SessionList extends ArrayList<TermSession>
     }
 
     @Override
-    public boolean addAll(Collection <? extends TermSession> collection) {
+    public boolean addAll(Collection<? extends TermSession> collection) {
         boolean result = super.addAll(collection);
         for (TermSession session : collection) {
             session.setTitleChangedListener(mTitleChangedListener);
@@ -99,7 +99,7 @@ public class SessionList extends ArrayList<TermSession>
     }
 
     @Override
-    public boolean addAll(int index, Collection <? extends TermSession> collection) {
+    public boolean addAll(int index, Collection<? extends TermSession> collection) {
         boolean result = super.addAll(index, collection);
         for (TermSession session : collection) {
             session.setTitleChangedListener(mTitleChangedListener);

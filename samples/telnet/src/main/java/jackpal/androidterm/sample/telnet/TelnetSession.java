@@ -173,8 +173,8 @@ public class TelnetSession extends TermSession {
     /* Echoes local input from the emulator back to the emulator screen. */
     private void doLocalEcho(byte[] data) {
         if (DEBUG) {
-            Log.d(TAG, "echoing " +
-                    Arrays.toString(data) + " back to terminal");
+            Log.d(TAG, "echoing "
+                    + Arrays.toString(data) + " back to terminal");
         }
         appendToEmulator(data, 0, data.length);
         notifyUpdate();

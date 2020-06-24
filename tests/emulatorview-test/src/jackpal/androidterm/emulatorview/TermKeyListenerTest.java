@@ -99,7 +99,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         throws UnsupportedEncodingException, IOException {
         keyHelper(KeyEvent.KEYCODE_C,
 
-                  KeyEvent.META_CTRL_ON ,
+                  KeyEvent.META_CTRL_ON,
                   new byte[]{0x03});
     }
 
@@ -108,20 +108,20 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         keyHelper(KeyEvent.KEYCODE_X,
 
                   KeyEvent.META_ALT_ON,
-                  new byte[]{0x00,0x00,0x00,0x00});
+                  new byte[]{0x00, 0x00, 0x00, 0x00});
     }
 
     public void testKey_ALT_x_esc()
             throws UnsupportedEncodingException, IOException {
         tkl_AltNotEsc.setAltSendsEsc(true);
         int keycode = KeyEvent.KEYCODE_ALT_LEFT;
-        KeyEvent event = new KeyEvent(1,2, KeyEvent.ACTION_DOWN, keycode, 0,
+        KeyEvent event = new KeyEvent(1, 2, KeyEvent.ACTION_DOWN, keycode, 0,
                 0);
         tkl_AltNotEsc.keyDown(keycode, event, false, true);
         keyHelperToggle(KeyEvent.KEYCODE_X,
 
                       KeyEvent.META_ALT_ON,
-                      new byte[]{0x1b,0x78}, true);
+                      new byte[]{0x1b, 0x78}, true);
         }
 
     public void testKey_ALT_c_no_esc()
@@ -129,7 +129,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         keyHelper(KeyEvent.KEYCODE_C,
 
                   KeyEvent.META_ALT_ON,
-                  new byte[]{-61,-89,0x00,0x00});
+                  new byte[]{-61, -89, 0x00, 0x00});
     }
 
 
@@ -143,15 +143,15 @@ public class TermKeyListenerTest extends  AndroidTestCase {
 
     public void testKey_del()
         throws UnsupportedEncodingException, IOException {
-        KeyEvent event = new KeyEvent(1,2, KeyEvent.ACTION_DOWN,
-                                      KeyEvent.KEYCODE_DEL,0 ,0);
+        KeyEvent event = new KeyEvent(1, 2, KeyEvent.ACTION_DOWN,
+                                      KeyEvent.KEYCODE_DEL, 0, 0);
         tkl_AltNotEsc.keyDown(event.getKeyCode(), event, true, false);
         byte[] res = mckTermSessionB.getCharSequence();
         byte[] exp = "\177".getBytes("UTF-8");
         assertNotNull(res);
         assertEquals(exp.length, res.length);
         for (int i = 0; i<exp.length; i++) {
-            assertEquals(exp[i],res[i]);
+            assertEquals(exp[i], res[i]);
         }
     }
 
@@ -257,14 +257,14 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         throws UnsupportedEncodingException, IOException {
         keyHelper(KeyEvent.KEYCODE_9,
                   KeyEvent.META_CTRL_ON,
-                  new byte[]{27,91,50,51,126});
+                  new byte[]{27, 91, 50, 51, 126});
     }
 
     public void testKey_CTRL_0()
         throws UnsupportedEncodingException, IOException {
         keyHelper(KeyEvent.KEYCODE_0,
                   KeyEvent.META_CTRL_ON,
-                  new byte[]{27,91,50,52,126});
+                  new byte[]{27, 91, 50, 52, 126});
     }
 
     public void testKey_FN_w()
@@ -272,7 +272,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_W,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,79,65}, true);
+                  new byte[]{27, 79, 65}, true);
     }
 
     public void testKey_FN_a()
@@ -280,7 +280,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_A,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,79,68}, true);
+                  new byte[]{27, 79, 68}, true);
     }
 
     public void testKey_FN_s()
@@ -288,7 +288,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_S,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,79,66}, true);
+                  new byte[]{27, 79, 66}, true);
     }
 
     public void testKey_FN_d()
@@ -296,7 +296,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_D,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,79,67}, true);
+                  new byte[]{27, 79, 67}, true);
     }
 
     public void testKey_FN_p()
@@ -304,7 +304,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_P,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,53,126}, true);
+                  new byte[]{27, 91, 53, 126}, true);
     }
 
     public void testKey_FN_n()
@@ -312,7 +312,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_N,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,54,126}, true);
+                  new byte[]{27, 91, 54, 126}, true);
     }
 
     public void testKey_FN_t()
@@ -328,7 +328,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_L,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{124,0,0,0}, true);
+                  new byte[]{124, 0, 0, 0}, true);
     }
 
     public void testKey_FN_u()
@@ -336,7 +336,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_U,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{95,0,0,0}, true);
+                  new byte[]{95, 0, 0, 0}, true);
     }
 
     public void testKey_FN_e()
@@ -344,7 +344,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_E,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,0,0,0}, true);
+                  new byte[]{27, 0, 0, 0}, true);
     }
 
     public void testKey_FN_i()
@@ -352,7 +352,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_I,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,50,126}, true);
+                  new byte[]{27, 91, 50, 126}, true);
     }
 
     public void testKey_FN_x()
@@ -360,7 +360,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_X,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,51,126}, true);
+                  new byte[]{27, 91, 51, 126}, true);
     }
 
     public void testKey_FN_h()
@@ -368,7 +368,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_H,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,49,126}, true);
+                  new byte[]{27, 91, 49, 126}, true);
     }
 
     public void testKey_FN_f()
@@ -376,7 +376,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_F,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,52,126}, true);
+                  new byte[]{27, 91, 52, 126}, true);
     }
 
     public void testKey_FN_PERIOD()
@@ -384,7 +384,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_PERIOD,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{28,0,0,0}, true);
+                  new byte[]{28, 0, 0, 0}, true);
     }
 
     public void testKey_FN_9()
@@ -392,7 +392,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_9,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{-62,-69,0,0}, true);
+                  new byte[]{-62, -69, 0, 0}, true);
     }
 
     public void testKey_FN_0()
@@ -400,7 +400,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
         tkl_AltNotEsc.handleFnKey(true);
         keyHelperToggle(KeyEvent.KEYCODE_0,
                   KeyEvent.META_FUNCTION_ON,
-                  new byte[]{27,91,50,49,126}, true);
+                  new byte[]{27, 91, 50, 49, 126}, true);
     }
 
     private void keyHelper(int keycode, int metastate,
@@ -412,7 +412,7 @@ public class TermKeyListenerTest extends  AndroidTestCase {
     private void keyHelperToggle(int keycode, int metastate,
                byte[] expectedOutPut, boolean toggle)
         throws UnsupportedEncodingException, IOException {
-        KeyEvent event = new KeyEvent(1,2, KeyEvent.ACTION_DOWN, keycode, 0,
+        KeyEvent event = new KeyEvent(1, 2, KeyEvent.ACTION_DOWN, keycode, 0,
                                       metastate);
         tkl_AltNotEsc.keyDown(event.getKeyCode(), event, true, toggle);
         byte[] res = mckTermSessionB.getCharSequence();

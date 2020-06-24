@@ -108,8 +108,8 @@ class UnicodeTranscript {
      */
     private int externalToInternalRow(int extRow) {
         if (extRow < -mActiveTranscriptRows || extRow > mScreenRows) {
-            String errorMessage = "externalToInternalRow "+ extRow +
-                " " + mScreenRows + " " + mActiveTranscriptRows;
+            String errorMessage = "externalToInternalRow "+ extRow
+                + " " + mScreenRows + " " + mActiveTranscriptRows;
             Log.e(TAG, errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
@@ -534,8 +534,8 @@ class UnicodeTranscript {
             return 0;
         }
 
-        if ((codePoint >= 0x1160 && codePoint <= 0x11FF) ||
-            (codePoint >= 0xD7B0 && codePoint <= 0xD7FF)) {
+        if ((codePoint >= 0x1160 && codePoint <= 0x11FF)
+            || (codePoint >= 0xD7B0 && codePoint <= 0xD7FF)) {
             if (Build.VERSION.SDK_INT >= HANGUL_CONJOINING_MIN_SDK) {
                 /* Treat Hangul jamo medial vowels and final consonants as
                  * combining characters with width 0 to make jamo composition
@@ -705,8 +705,8 @@ class UnicodeTranscript {
         StyleRow tmp = tmpColor;
         if (color != null) {
             int columns = mColumns;
-            if (!strictBounds && mLines[row] != null &&
-                    mLines[row] instanceof FullUnicodeLine) {
+            if (!strictBounds && mLines[row] != null
+                    && mLines[row] instanceof FullUnicodeLine) {
                 FullUnicodeLine line = (FullUnicodeLine) mLines[row];
                 /* If either the start or the end column is in the middle of
                  * an East Asian wide character, include the appropriate column
@@ -939,7 +939,7 @@ class FullUnicodeLine {
     private void commonConstructor(int columns) {
         mColumns = columns;
         mOffset = new short[columns];
-        mText = new char[(int)(SPARE_CAPACITY_FACTOR*columns)];
+        mText = new char[(int) (SPARE_CAPACITY_FACTOR*columns)];
     }
 
     public int getSpaceUsed() {

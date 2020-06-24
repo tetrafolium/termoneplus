@@ -111,7 +111,7 @@ public class TermActivity extends AppCompatActivity {
         TermSession session;
 
         if (sessionType != null && sessionType.equals("telnet")) {
-			/* Telnet connection: we need to do the network connect on a
+                        /* Telnet connection: we need to do the network connect on a
                separate thread, so kick that off and wait for it to finish. */
             connectToTelnet(myIntent.getStringExtra("host"));
             return;

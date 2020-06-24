@@ -554,8 +554,8 @@ class TermKeyListener {
         default: {
             int metaState = event.getMetaState();
             chordedCtrl = ((META_CTRL_ON & metaState) != 0);
-            boolean effectiveCaps = allowToggle &&
-                    (mCapKey.isActive());
+            boolean effectiveCaps = allowToggle
+                    && (mCapKey.isActive());
             boolean effectiveAlt = allowToggle && mAltKey.isActive();
             int effectiveMetaState = metaState & (~META_CTRL_MASK);
             if (effectiveCaps) {
@@ -566,7 +566,7 @@ class TermKeyListener {
             }
             if (effectiveAlt) {
                 if (mAltSendsEsc) {
-                    mTermSession.write(new byte[]{0x1b},0,1);
+                    mTermSession.write(new byte[]{0x1b}, 0, 1);
                     effectiveMetaState &= ~KeyEvent.META_ALT_MASK;
                 } else if (SUPPORT_8_BIT_META) {
                     setHighBit = true;
@@ -582,7 +582,7 @@ class TermKeyListener {
 
             if ((metaState & KeyEvent.META_META_ON) != 0) {
                 if (mAltSendsEsc) {
-                    mTermSession.write(new byte[]{0x1b},0,1);
+                    mTermSession.write(new byte[]{0x1b}, 0, 1);
                     effectiveMetaState &= ~KeyEvent.META_META_MASK;
                 } else {
                     if (SUPPORT_8_BIT_META) {
@@ -652,8 +652,8 @@ class TermKeyListener {
     static boolean isEventFromToggleDevice(KeyEvent event) {
         KeyCharacterMapCompat kcm = KeyCharacterMapCompat.wrap(
                 KeyCharacterMap.load(event.getDeviceId()));
-        return kcm.getModifierBehaviour() ==
-                KeyCharacterMapCompat.MODIFIER_BEHAVIOR_CHORDED_OR_TOGGLED;
+        return kcm.getModifierBehaviour()
+                == KeyCharacterMapCompat.MODIFIER_BEHAVIOR_CHORDED_OR_TOGGLED;
     }
 
     public boolean handleKeyCode(int keyCode, KeyEvent event, boolean appMode) throws IOException {

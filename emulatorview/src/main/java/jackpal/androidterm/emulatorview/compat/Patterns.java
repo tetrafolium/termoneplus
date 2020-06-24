@@ -26,7 +26,7 @@ package jackpal.androidterm.emulatorview.compat;
 import java.util.regex.Pattern;
 
 public class Patterns {
-	/**
+        /**
      *  Regular expression to match all IANA top-level domains for WEB_URL.
      *  List accurate as of 2011/07/18.  List taken from:
      *  http://data.iana.org/TLD/tlds-alpha-by-domain.txt

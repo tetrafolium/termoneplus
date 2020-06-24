@@ -40,7 +40,7 @@ class Bitmap4x8FontRenderer extends BaseTextRenderer {
     public Bitmap4x8FontRenderer(Resources resources, ColorScheme scheme) {
         super(scheme);
         int fontResource = R.drawable.atari_small_nodpi;
-        mFont = BitmapFactory.decodeResource(resources,fontResource);
+        mFont = BitmapFactory.decodeResource(resources, fontResource);
         mPaint = new Paint();
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
     }
@@ -65,8 +65,8 @@ class Bitmap4x8FontRenderer extends BaseTextRenderer {
         int backColor = TextStyle.decodeBackColor(textStyle);
         int effect = TextStyle.decodeEffect(textStyle);
 
-        boolean inverse = mReverseVideo ^
-                ((effect & (TextStyle.fxInverse | TextStyle.fxItalic)) != 0);
+        boolean inverse = mReverseVideo
+                ^ ((effect & (TextStyle.fxInverse | TextStyle.fxItalic)) != 0);
         if (inverse) {
             int temp = foreColor;
             foreColor = backColor;

@@ -291,16 +291,16 @@ class TerminalEmulator {
         for (char i = 0; i < 128; ++i) {
             mSpecialGraphicsCharMap[i] = i;
         }
-        mSpecialGraphicsCharMap['_'] = ' ';	// Blank
-        mSpecialGraphicsCharMap['b'] = 0x2409;	// Tab
-        mSpecialGraphicsCharMap['c'] = 0x240C;	// Form feed
-        mSpecialGraphicsCharMap['d'] = 0x240D;	// Carriage return
-        mSpecialGraphicsCharMap['e'] = 0x240A;	// Line feed
-        mSpecialGraphicsCharMap['h'] = 0x2424;	// New line
-        mSpecialGraphicsCharMap['i'] = 0x240B;	// Vertical tab/"lantern"
-        mSpecialGraphicsCharMap['}'] = 0x00A3;	// Pound sterling symbol
-        mSpecialGraphicsCharMap['f'] = 0x00B0;	// Degree symbol
-        mSpecialGraphicsCharMap['`'] = 0x2B25;	// Diamond
+        mSpecialGraphicsCharMap['_'] = ' ';     // Blank
+        mSpecialGraphicsCharMap['b'] = 0x2409;  // Tab
+        mSpecialGraphicsCharMap['c'] = 0x240C;  // Form feed
+        mSpecialGraphicsCharMap['d'] = 0x240D;  // Carriage return
+        mSpecialGraphicsCharMap['e'] = 0x240A;  // Line feed
+        mSpecialGraphicsCharMap['h'] = 0x2424;  // New line
+        mSpecialGraphicsCharMap['i'] = 0x240B;  // Vertical tab/"lantern"
+        mSpecialGraphicsCharMap['}'] = 0x00A3;  // Pound sterling symbol
+        mSpecialGraphicsCharMap['f'] = 0x00B0;  // Degree symbol
+        mSpecialGraphicsCharMap['`'] = 0x2B25;  // Diamond
         mSpecialGraphicsCharMap['~'] = 0x2022;	// Bullet point
         mSpecialGraphicsCharMap['y'] = 0x2264;	// Less-than-or-equals sign (<=)
         mSpecialGraphicsCharMap['|'] = 0x2260;	// Not equals sign (!=)
@@ -407,7 +407,7 @@ class TerminalEmulator {
         }
 
         // Try to resize the screen without getting the transcript
-        int[] cursor = { mCursorCol, mCursorRow };
+        int[] cursor = {mCursorCol, mCursorRow };
         boolean fastResize = screen.fastResize(columns, rows, cursor);
 
         GrowableIntArray cursorColor = null;
@@ -517,7 +517,7 @@ class TerminalEmulator {
         }
         char c, cLow;
         int colorOffset = 0;
-        for(int i = 0; i <= end; i++) {
+        for (int i = 0; i <= end; i++) {
             c = transcriptText.charAt(i);
             int style = colors.at(i-colorOffset);
             if (Character.isHighSurrogate(c)) {
@@ -1048,7 +1048,7 @@ class TerminalEmulator {
         case '8': // DECRC restore cursor
             setCursorRowCol(mSavedCursorRow, mSavedCursorCol);
             mEffect = mSavedEffect;
-            mDecFlags = (mDecFlags & ~ K_DECSC_DECRC_MASK)
+            mDecFlags = (mDecFlags & ~K_DECSC_DECRC_MASK)
                     | mSavedDecFlags_DECSC_DECRC;
             break;
 
@@ -1298,7 +1298,7 @@ class TerminalEmulator {
             switch (getArg0(0)) {
             case 5: // Device status report (DSR):
                     // Answer is ESC [ 0 n (Terminal OK).
-                byte[] dsr = { (byte) 27, (byte) '[', (byte) '0', (byte) 'n' };
+                byte[] dsr = {(byte) 27, (byte) '[', (byte) '0', (byte) 'n' };
                 mSession.write(dsr, 0, dsr.length);
                 break;
 
@@ -1351,7 +1351,7 @@ class TerminalEmulator {
         // SGR
         for (int i = 0; i <= mArgIndex; i++) {
             int code = mArgs[i];
-            if ( code < 0) {
+            if (code < 0) {
                 if (mArgIndex > 0) {
                     continue;
                 } else {
@@ -1565,7 +1565,7 @@ class TerminalEmulator {
     }
 
     private void scroll() {
-        mScrollCounter ++;
+        mScrollCounter++;
         mScreen.scroll(mTopMargin, mBottomMargin, getDefaultStyle());
     }
 
@@ -1778,7 +1778,7 @@ class TerminalEmulator {
             mAboutToAutoWrap = (mCursorCol == mColumns - 1);
 
             //Force line-wrap flag to trigger even for lines being typed
-            if(mAboutToAutoWrap)
+            if (mAboutToAutoWrap)
                 mScreen.setLineWrap(mCursorRow);
         }
 

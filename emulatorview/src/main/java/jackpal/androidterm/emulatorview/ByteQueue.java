@@ -96,7 +96,7 @@ class ByteQueue {
         synchronized(this) {
             int bufferLength = mBuffer.length;
             boolean wasEmpty = mStoredBytes == 0;
-            while(bufferLength == mStoredBytes) {
+            while (bufferLength == mStoredBytes) {
                 wait();
             }
             int tail = mHead + mStoredBytes;
