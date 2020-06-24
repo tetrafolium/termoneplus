@@ -1290,11 +1290,9 @@ public class EmulatorView extends View implements GestureDetector.OnGestureListe
             return true;
         } else if (handleFnKey(keyCode, true)) {
             return true;
-        } else if (isSystemKey(keyCode, event)) {
-            if (!isInterceptedSystemKey(keyCode)) {
-                // Don't intercept the system keys
-                return super.onKeyDown(keyCode, event);
-            }
+        } else if ((isSystemKey(keyCode, event)) && (!isInterceptedSystemKey(keyCode))) {
+            // Don't intercept the system keys
+            return super.onKeyDown(keyCode, event);
         }
 
         // Translate the keyCode into an ASCII character.
@@ -1335,11 +1333,9 @@ public class EmulatorView extends View implements GestureDetector.OnGestureListe
             return true;
         } else if (handleFnKey(keyCode, false)) {
             return true;
-        } else if (isSystemKey(keyCode, event)) {
-            // Don't intercept the system keys
-            if (!isInterceptedSystemKey(keyCode)) {
-                return super.onKeyUp(keyCode, event);
-            }
+        } else // Don't intercept the system keys
+        if ((isSystemKey(keyCode, event)) && (!isInterceptedSystemKey(keyCode))) {
+            return super.onKeyUp(keyCode, event);
         }
 
         mKeyListener.keyUp(keyCode, event);

@@ -75,9 +75,8 @@ public class Installer {
 
         File target = new File(target_path, source.getName());
         File backup = new File(target.getAbsolutePath() + "-bak");
-        if (target.exists())
-            if (!target.renameTo(backup))
-                return false;
+        if ((target.exists()) && (!target.renameTo(backup)))
+            return false;
 
         try {
             OutputStream os = new FileOutputStream(target);

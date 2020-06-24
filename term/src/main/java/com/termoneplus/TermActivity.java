@@ -48,11 +48,9 @@ public class TermActivity extends jackpal.androidterm.Term {
     @Override
     protected void updatePrefs() {
         Integer theme_resid = getThemeId();
-        if (theme_resid != null) {
-            if (theme_resid != ThemeManager.presetTheme(this, false, theme_resid)) {
-                restart(R.string.restart_thememode_change);
-                return;
-            }
+        if ((theme_resid != null) && (theme_resid != ThemeManager.presetTheme(this, false, theme_resid))) {
+            restart(R.string.restart_thememode_change);
+            return;
         }
         super.updatePrefs();
     }

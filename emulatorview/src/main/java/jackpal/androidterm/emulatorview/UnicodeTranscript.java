@@ -662,12 +662,10 @@ class UnicodeTranscript {
         if (x2 < columns) {
             int endCol = x2;
             x2 = line.findStartOfColumn(endCol);
-            if (!strictBounds && endCol > 0 && endCol < columns - 1) {
-                /* If the end column is the middle of an East Asian wide
-                 * character, include that character in the bounds */
-                if (x2 == line.findStartOfColumn(endCol - 1)) {
-                    x2 = line.findStartOfColumn(endCol + 1);
-                }
+            /* If the end column is the middle of an East Asian wide
+            * character, include that character in the bounds */
+            if ((!strictBounds && endCol > 0 && endCol < columns - 1) && (x2 == line.findStartOfColumn(endCol - 1))) {
+                x2 = line.findStartOfColumn(endCol + 1);
             }
         } else {
             x2 = line.getSpaceUsed();

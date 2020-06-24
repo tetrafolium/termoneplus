@@ -1427,11 +1427,9 @@ class TerminalEmulator {
     private boolean isValidColorIndex(int color) {
         // if is in  pre-defined set of 256 colors
         boolean result = (0 <= color && color <= 255);
-        if (!result) {
-            if (EmulatorDebug.LOG_UNKNOWN_ESCAPE_SEQUENCES) {
-                Log.w(EmulatorDebug.LOG_TAG,
-                        String.format("Invalid color index %d", color));
-            }
+        if ((!result) && (EmulatorDebug.LOG_UNKNOWN_ESCAPE_SEQUENCES)) {
+            Log.w(EmulatorDebug.LOG_TAG,
+                    String.format("Invalid color index %d", color));
         }
         return result;
     }
@@ -1741,16 +1739,14 @@ class TerminalEmulator {
         boolean autoWrap = autoWrapEnabled();
         int width = UnicodeTranscript.charWidth(c);
 
-        if (autoWrap) {
-            if (mCursorCol == mColumns - 1 && (mAboutToAutoWrap || width == 2)) {
-                mScreen.setLineWrap(mCursorRow);
-                mCursorCol = 0;
-                mJustWrapped = true;
-                if (mCursorRow + 1 < mBottomMargin) {
-                    mCursorRow++;
-                } else {
-                    scroll();
-                }
+        if ((autoWrap) && (mCursorCol == mColumns - 1 && (mAboutToAutoWrap || width == 2))) {
+            mScreen.setLineWrap(mCursorRow);
+            mCursorCol = 0;
+            mJustWrapped = true;
+            if (mCursorRow + 1 < mBottomMargin) {
+                mCursorRow++;
+            } else {
+                scroll();
             }
         }
 
