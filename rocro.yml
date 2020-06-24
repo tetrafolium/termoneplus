@@ -2,58 +2,56 @@ inspecode:
 
   astyle:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 53 }
 
   checkstyle:
+    #config-file: .rocro/checkstyle/checkstyle.xml   # (auto-detected)
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 938 }
 
   clang-format:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 80 }
 
   cpd:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 29 }
 
   #### not supported yet ??
   #fortify:
   #  thresholds: { num-issues: 999 }
 
   fossology:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 6 }
 
   grep:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 12 }
 
   infer:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 41 }
 
   jscpd:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 4 }
 
   misspell:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 1 }
 
   pmd:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 8 }
 
   spotbugs:
-  - options:
-      -targets: libtermexec
-    thresholds: { num-issues: 999 }
-  - options:
-      -targets: term
-    thresholds: { num-issues: 999 }
+    options:
+      -targets: [ term, libtermexec ]
+    thresholds: { num-issues: 291 }
 
   uncrustify:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 79 }
 
   #### not supported yet ??
   #understand:
   #  thresholds: { num-issues: 999 }
 
   unused:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 236 }
